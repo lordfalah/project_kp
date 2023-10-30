@@ -96,7 +96,7 @@ const SingleImageDropzone = forwardRef(
         } else if (errors[0]?.code === "file-invalid-type") {
           return ERROR_MESSAGES.fileInvalidType();
         } else if (errors[0]?.code === "too-many-files") {
-          return ERROR_MESSAGES.tooManyFiles(dropzoneOptions?.maxFiles ?? 0);
+          return ERROR_MESSAGES.tooManyFiles(dropzoneOptions?.maxFiles ?? 1);
         } else {
           return ERROR_MESSAGES.fileNotSupported();
         }
