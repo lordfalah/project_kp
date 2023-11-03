@@ -1,9 +1,14 @@
+"use client";
+
 import React from "react";
 import Container from "./Container";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const BreadCrumb = ({ itemsLink, className }) => {
   const addClass = className ? className : "";
+  const pathname = usePathname();
+
   return (
     <section className={`breadcrump bg-gray-100 ${addClass}`}>
       <Container>
@@ -18,7 +23,7 @@ const BreadCrumb = ({ itemsLink, className }) => {
                 <Link
                   href={path}
                   className={`${
-                    idx + 1 === itemsLink.length
+                    pathname === path
                       ? "font-semibold"
                       : "after:content-['/'] after:mx-5"
                   }`}
