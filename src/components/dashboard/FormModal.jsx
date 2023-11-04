@@ -45,8 +45,8 @@ const FormModal = () => {
             description,
             price,
             files: {
-              url: res.url,
-              size: res.size,
+              url: res?.url || "",
+              size: res?.size || 0,
             },
           }),
         });

@@ -9,10 +9,17 @@ export async function POST(req, res) {
       title,
       description,
       price: parseFloat(price),
-      imageUrls: { imageUrls: { ...files } },
+      imageUrls: [{ url: files.url, size: files.size }],
       category: {
-        connect: {
-          slug: "teh",
+        connectOrCreate: {
+          create: {
+            slug: "teh",
+            description: "minuman teh seger",
+          },
+
+          where: {
+            slug: "teh",
+          },
         },
       },
     },
@@ -20,6 +27,8 @@ export async function POST(req, res) {
       category: true,
     },
   });
+
+  console.log({ products });
 
   return NextResponse.json(products, { status: 201 });
 }
