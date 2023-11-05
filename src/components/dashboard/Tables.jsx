@@ -38,7 +38,7 @@ const Tables = () => {
                     {navTitle.map(({ title }, idx) => (
                       <th
                         key={idx}
-                        className="pr-10 pl-4 py-2.5 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                        className="pr-10 pl-4  font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
                       >
                         {title}
                       </th>
@@ -69,7 +69,7 @@ const Tables = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="pr-10 pl-4 py-2.5 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                      <td className="pr-10 pl-4  align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                         <p className="mb-0 text-xs font-semibold leading-tight  dark:opacity-80">
                           Manager
                         </p>
@@ -77,17 +77,17 @@ const Tables = () => {
                           Organization
                         </p>
                       </td>
-                      <td className="pr-10 pl-4 py-2.5 text-sm leading-normal align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                        <span className="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap  align-baseline font-bold uppercase leading-none text-white">
+                      <td className="pr-10 pl-4  text-sm leading-normal align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                        <span className="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap  align-baseline font-bold uppercase leading-none text-white">
                           Online
                         </span>
                       </td>
-                      <td className="pr-10 pl-4 py-2.5 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                      <td className="pr-10 pl-4  align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                         <span className="text-xs font-semibold leading-tight  dark:opacity-80 text-slate-400">
                           23/04/18
                         </span>
                       </td>
-                      <td className="pr-10 pl-4 py-2.5 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent flex gap-x-3.5">
+                      <td className="pr-10 pl-4 py-5 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent flex gap-x-3.5">
                         <Edit />
                         <Trash />
                       </td>

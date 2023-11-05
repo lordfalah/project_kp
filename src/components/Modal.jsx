@@ -2,9 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, useState } from "react";
-import FormModal from "./dashboard/FormModal";
 
-const Modal = () => {
+const Modal = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Fragment>
@@ -14,12 +13,12 @@ const Modal = () => {
       >
         Create
       </button>
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} children={children} />
     </Fragment>
   );
 };
 
-const SpringModal = ({ isOpen, setIsOpen }) => {
+export const SpringModal = ({ isOpen, setIsOpen, children }) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -35,9 +34,9 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-lg w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="text-white rounded-lg w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
-            <FormModal />
+            {children}
           </motion.div>
         </motion.div>
       )}
