@@ -1,20 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-
-const nav_link = {
-  route_dash: [
-    {
-      name: "Dashboard",
-      path: "/dashboard",
-    },
-
-    {
-      name: "Table Admin",
-      path: "/dashboard/admin",
-    },
-  ],
-};
+import { nav_link } from "./SideNav";
 
 const BreadCrumb = () => {
   const pathname = usePathname();

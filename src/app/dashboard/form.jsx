@@ -2,6 +2,7 @@
 
 import FormModal from "@/components/dashboard/FormModal";
 import { useEdgeStore } from "@/libs/edgestore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 const form = () => {
@@ -38,7 +39,7 @@ const form = () => {
         // you can run some server action or api here
         // to add the necessary data to your database
 
-        await fetch("/api/products/", {
+        const req = await fetch("/api/products/", {
           method: "POST",
           body: JSON.stringify({
             title,
@@ -50,14 +51,50 @@ const form = () => {
             },
           }),
         });
+
+        const response = await req.json();
+        return response;
       }
     } catch (error) {
       console.log({ error });
+      return error;
     } finally {
       setFile(null);
       setProgress(0);
     }
   };
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: submitForm,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["products"] });
+      const previousProducts = queryClient.getQueryData(["products"]);
+      return { previousProducts };
+    },
+
+    onSuccess: (data, variables, context) => {
+      // Optimistically update to the new value
+
+      if (data?.message) {
+        queryClient.setQueryData(["products"], context.previousProducts);
+      } else {
+        queryClient.setQueryData(["products"], (prev) => [...prev, data]);
+      }
+
+      return data;
+    },
+
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(["products"], context.previousProducts);
+    },
+
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
 
   return (
     <FormModal
@@ -65,7 +102,7 @@ const form = () => {
       method={"POST"}
       progress={progress}
       onChanges={onChanges}
-      submitForm={submitForm}
+      submitForm={mutate}
       form={form}
       file={file}
       setFile={setFile}

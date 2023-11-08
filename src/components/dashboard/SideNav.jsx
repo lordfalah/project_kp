@@ -9,7 +9,7 @@ import Link from "next/link";
 import React, { useContext, useEffect, useRef } from "react";
 import { OpenNav } from "@/utils/hooks/useOpenNav";
 
-const nav_link = {
+export const nav_link = {
   route_dash: [
     {
       name: "Dashboard",
