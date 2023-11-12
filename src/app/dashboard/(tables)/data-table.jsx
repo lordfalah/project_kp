@@ -9,6 +9,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { Input } from "@/components/ui/input";
+
 import {
   Table,
   TableBody,
@@ -28,13 +30,14 @@ import {
 
 import { Fragment, useState } from "react";
 import Search from "@/assets/icon/Search";
-import Modal from "@/components/Modal";
+import { ModalBtn, SpringModal } from "@/components/Modal";
 import Form from "./form";
-import { getProducts } from "./page";
+import { getProducts } from "../page";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import ChevronLeftDouble from "@/assets/icon/ChevronLeftDouble";
 import ChevronRightDouble from "@/assets/icon/ChevronRightDouble";
+import { NavigateOpen } from "@/utils/hooks/useOpenNav";
 
 function DataTable({ columns, data: values }) {
   const [sorting, setSorting] = useState([]);
@@ -65,12 +68,8 @@ function DataTable({ columns, data: values }) {
     <Fragment>
       <div className="bg-white p-4 sm:p-6 grid grid-cols-6 gap-x-4 flex-wrap rounded-lg">
         <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease col-span-4">
-          <span className="text-sm ease leading-5.6 absolute z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-            <Search />
-          </span>
-          <input
+          <Input
             type="text"
-            className="pl-9 text-sm focus:shadow-primary-outline ease w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
             placeholder="Type here..."
             value={table.getColumn("title")?.getFilterValue() ?? ""}
             onChange={(event) =>
@@ -80,9 +79,13 @@ function DataTable({ columns, data: values }) {
         </div>
 
         <div className="col-span-2 justify-self-end">
-          <Modal>
-            <Form />
-          </Modal>
+          <NavigateOpen>
+            <ModalBtn title={"Create"} />
+
+            <SpringModal>
+              <Form />
+            </SpringModal>
+          </NavigateOpen>
         </div>
       </div>
       <div className="rounded-md border bg-white my-6">

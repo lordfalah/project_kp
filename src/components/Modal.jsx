@@ -1,24 +1,27 @@
 "use client";
 
+import { OpenNav } from "@/utils/hooks/useOpenNav";
 import { AnimatePresence, motion } from "framer-motion";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 
-const Modal = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const ModalBtn = ({ title, type }) => {
+  const { isOpen, setIsOpen } = useContext(OpenNav);
   return (
     <Fragment>
       <button
+        type={type}
         onClick={() => setIsOpen(true)}
         className="bg-gradient-to-r from-violet-600 to-blue-500 text-white font-medium px-4 py-2 rounded hover:opacity-90 transition-opacity"
       >
-        Create
+        {title}
       </button>
-      <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} children={children} />
     </Fragment>
   );
 };
 
-export const SpringModal = ({ isOpen, setIsOpen, children }) => {
+export const SpringModal = ({ children }) => {
+  const { isOpen, setIsOpen } = useContext(OpenNav);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -43,5 +46,3 @@ export const SpringModal = ({ isOpen, setIsOpen, children }) => {
     </AnimatePresence>
   );
 };
-
-export default Modal;

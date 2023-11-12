@@ -1,6 +1,7 @@
 "use client";
 
 import { UploadCloudIcon, X } from "lucide-react";
+import Image from "next/image";
 import React, { forwardRef, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
@@ -118,10 +119,14 @@ const SingleImageDropzone = forwardRef(
           <input ref={ref} {...getInputProps()} />
 
           {imageUrl ? (
-            <img
-              className="h-full w-full rounded-md object-cover"
+            <Image
+              className="h-full w-full rounded-md aspect-square"
               src={imageUrl}
-              alt={acceptedFiles[0]?.name}
+              alt={acceptedFiles[0]?.name || "image-product"}
+              width={350}
+              height={350}
+              priority
+              style={{ objectFit: "cover" }}
             />
           ) : (
             <div className="flex flex-col items-center justify-center text-xs text-gray-400">

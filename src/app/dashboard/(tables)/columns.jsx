@@ -2,8 +2,12 @@
 
 import Edit from "@/assets/icon/Edit";
 import Trash from "@/assets/icon/Trash";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SpringModal } from "@/components/Modal";
+import { useEdgeStore } from "@/libs/edgestore";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
+import FormEdit from "./formEdit";
+import { NavigateOpen } from "@/utils/hooks/useOpenNav";
 
 const deleteProduct = async (id) => {
   try {
@@ -15,6 +19,17 @@ const deleteProduct = async (id) => {
     console.log(error);
   }
 };
+
+// const getProduct = async (id) => {
+//   try {
+//     const req = await fetch(`/api/products/${id}`, { method: "GET" });
+//     const res = await req.json();
+
+//     return res;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const columns = [
   {
@@ -61,6 +76,7 @@ export const columns = [
     header: "Action",
     cell: ({ row }) => {
       const queryClient = useQueryClient();
+      const { edgestore } = useEdgeStore();
 
       const mutation = useMutation({
         mutationFn: deleteProduct,
@@ -83,16 +99,25 @@ export const columns = [
 
       return (
         <div className="flex gap-x-4">
-          <button
-            type="button"
-            onClick={() => console.log(`test + ${row?.original?.id}`)}
-          >
-            <Edit />
-          </button>
+          <NavigateOpen>
+            <Edit row={row} />
+            <SpringModal>
+              <FormEdit data={row?.original} />
+            </SpringModal>
+          </NavigateOpen>
 
           <button
             type="button"
-            onClick={() => mutation.mutate(row?.original?.id)}
+            onClick={async () => {
+              try {
+                mutation.mutate(row?.original?.id);
+                await edgestore.publicFiles.delete({
+                  url: row?.original?.imageUrls[0]?.url,
+                });
+              } catch (error) {
+                console.log(error);
+              }
+            }}
           >
             <Trash />
           </button>

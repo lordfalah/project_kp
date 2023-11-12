@@ -1,7 +1,7 @@
 import Search from "@/assets/icon/Search";
 import React from "react";
 import Modal from "../Modal";
-import Form from "@/app/dashboard/form";
+import Form from "@/app/dashboard/(tables)/form";
 
 const BreadTrigger = () => {
   return (

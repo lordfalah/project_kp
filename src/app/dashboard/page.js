@@ -1,8 +1,8 @@
 import Cards from "@/components/dashboard/Cards";
 import Header from "@/components/dashboard/Header";
 import prisma from "@/libs/prisma";
-import { columns } from "./columns";
-import DataTable from "./data-table";
+import { columns } from "./(tables)/columns";
+import DataTable from "./(tables)/data-table";
 
 import getQueryClient from "@/utils/query/getQueryClient";
 

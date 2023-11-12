@@ -1,6 +1,9 @@
 "use client";
 
+import { useContext } from "react";
+import { Input } from "../ui/input";
 import { SingleImageDropzone } from "../uploads/SingleImageDropzone";
+import { OpenNav } from "@/utils/hooks/useOpenNav";
 
 const FormModal = ({
   title,
@@ -10,8 +13,10 @@ const FormModal = ({
   submitForm,
   form,
   file,
-  setFile,
+  onChangeFile,
 }) => {
+  const { setIsOpen } = useContext(OpenNav);
+
   return (
     <form onSubmit={submitForm} method={method}>
       <div className="bg-white rounded-lg shadow p-4">
@@ -24,9 +29,7 @@ const FormModal = ({
             dropzoneOptions={{
               maxSize: 1024 * 1024 * 4, //4mb
             }}
-            onChange={(file) => {
-              setFile(file);
-            }}
+            onChange={onChangeFile}
           />
 
           <div>
@@ -44,20 +47,19 @@ const FormModal = ({
         <div className="">
           <label htmlFor="title" className="h-full text-black">
             <span className="text-lg font-medium">Title</span>
-            <input
+            <Input
               required
               onChange={onChanges}
               value={form.title}
               name="title"
               id="title"
               placeholder="Title"
-              className="placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-100 focus:bg-white focus:outline-none focus:ring-1 ring-offset-current ring-offset-1 focus:ring-black/25"
             />
           </label>
 
           <label htmlFor="price">
             <span className="text-lg font-medium text-black">Price</span>
-            <input
+            <Input
               required
               type="number"
               onChange={onChanges}
@@ -65,7 +67,6 @@ const FormModal = ({
               name="price"
               id="price"
               placeholder="Price"
-              className="text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-100 focus:bg-white focus:outline-none focus:ring-1 ring-offset-current ring-offset-1 focus:ring-black/25"
             />
           </label>
 
@@ -88,6 +89,7 @@ const FormModal = ({
         <div className="flex flex-row-reverse">
           <div className="flex-initial pl-3">
             <button
+              onClick={() => setIsOpen(false)}
               type="submit"
               className="bg-gradient-to-r from-violet-600 to-blue-500 font-medium px-5 py-2.5 rounded hover:opacity-90 transition-opacity"
             >
@@ -96,6 +98,7 @@ const FormModal = ({
           </div>
           <div className="flex-initial">
             <button
+              onClick={() => setIsOpen(false)}
               type="button"
               className="flex items-center px-5 py-2.5 font-medium tracking-wide text-black capitalize rounded-md  hover:bg-red-200 hover:fill-current hover:text-red-600  focus:outline-none  transition duration-300 transform active:scale-95 ease-in-out"
             >

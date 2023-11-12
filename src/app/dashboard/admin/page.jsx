@@ -3,8 +3,8 @@ import Header from "@/components/dashboard/Header";
 import prisma from "@/libs/prisma";
 
 import getQueryClient from "@/utils/query/getQueryClient";
-import DataTable from "../data-table";
-import { columns } from "../columns";
+import DataTable from "../(tables)/data-table";
+import { columns } from "../(tables)/columns";
 
 export const revalidate = 0;
 export const getProducts = async () => {

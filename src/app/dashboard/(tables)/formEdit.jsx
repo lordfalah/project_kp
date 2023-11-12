@@ -5,14 +5,16 @@ import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-const form = () => {
+const FormEdit = ({ data }) => {
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    price: "",
+    title: data?.title || "",
+    description: data?.description || "",
+    price: data?.price || "",
   });
-  const [file, setFile] = useState(null);
+
+  const [file, setFile] = useState(data?.imageUrls[0]?.url || null);
   const [progress, setProgress] = useState(0);
+
   const { edgestore } = useEdgeStore();
 
   const onChanges = (e) => {
@@ -22,33 +24,55 @@ const form = () => {
     }));
   };
 
+  const onChangeFile = async (file) => {
+    setFile(file);
+  };
+
   const submitForm = async (e) => {
     e.preventDefault();
     const { title, description, price } = form;
 
     try {
-      if (file && title && description && price) {
-        const res = await edgestore.publicFiles.upload({
-          file,
-          onProgressChange: (progress) => {
-            // you can use this to show a progress bar
-            setProgress(progress);
-          },
-        });
+      if (title && description && price) {
+        let newFile = null;
+
+        // Pengecekan objek
+        if (typeof file === "object" && file !== null && !Array.isArray(file)) {
+          const res = await edgestore.publicFiles.upload({
+            file,
+            options: {
+              replaceTargetUrl: data?.imageUrls[0]?.url,
+            },
+            onProgressChange: (progress) => {
+              // you can use this to show a progress bar
+              setProgress(progress);
+            },
+          });
+
+          newFile = {
+            url: res?.url,
+            size: res?.size,
+          };
+        }
 
         // you can run some server action or api here
         // to add the necessary data to your database
 
-        const req = await fetch("/api/products/", {
-          method: "POST",
+        const req = await fetch(`/api/products/${data?.id}`, {
+          method: "PUT",
           body: JSON.stringify({
             title,
             description,
             price,
             files: {
-              url: res?.url || "",
-              size: res?.size || 0,
+              ...(newFile
+                ? { ...newFile }
+                : {
+                    url: data?.imageUrls[0]?.url,
+                    size: data?.imageUrls[0]?.size,
+                  }),
             },
+            slug: data?.catSlug,
           }),
         });
 
@@ -77,12 +101,13 @@ const form = () => {
     onSuccess: (data, variables, context) => {
       // Optimistically update to the new value
 
-      if (data?.message) {
-        queryClient.setQueryData(["products"], context.previousProducts);
-      } else {
-        queryClient.setQueryData(["products"], (prev) => [...prev, data]);
-      }
+      queryClient.setQueryData(["products"], (prev) => {
+        const updatedProducts = [...prev];
+        const idx = prev.findIndex((p) => p.id === data?.id);
+        updatedProducts[idx] = data;
 
+        return updatedProducts;
+      });
       return data;
     },
 
@@ -90,7 +115,6 @@ const form = () => {
       queryClient.setQueryData(["products"], context.previousProducts);
     },
 
-    // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
@@ -98,16 +122,17 @@ const form = () => {
 
   return (
     <FormModal
-      title={"Add Product"}
-      method={"POST"}
+      title={"Edit Product"}
+      method={"PUT"}
       progress={progress}
       onChanges={onChanges}
       submitForm={mutate}
       form={form}
       file={file}
       setFile={setFile}
+      onChangeFile={onChangeFile}
     ></FormModal>
   );
 };
 
-export default form;
+export default FormEdit;
