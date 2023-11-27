@@ -32,26 +32,26 @@ import { Fragment, useState } from "react";
 import Search from "@/assets/icon/Search";
 import { ModalBtn, SpringModal } from "@/components/Modal";
 import Form from "./form";
-import { getProducts } from "../page";
+import { getUsers } from "../page";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import ChevronLeftDouble from "@/assets/icon/ChevronLeftDouble";
 import ChevronRightDouble from "@/assets/icon/ChevronRightDouble";
 import { NavigateOpen } from "@/utils/hooks/useOpenNav";
+import { columnsAdmin } from "./columns";
 
-function DataTable({ columns, data: values }) {
+function DataTableAdmin() {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
 
   const { data } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-    initialData: values,
+    queryKey: ["users"],
+    queryFn: getUsers,
   });
 
   const table = useReactTable({
     data,
-    columns,
+    columns: columnsAdmin,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -71,9 +71,9 @@ function DataTable({ columns, data: values }) {
           <Input
             type="text"
             placeholder="Type here..."
-            value={table.getColumn("title")?.getFilterValue() ?? ""}
+            value={table.getColumn("name")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
           />
         </div>
@@ -128,7 +128,7 @@ function DataTable({ columns, data: values }) {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columnsAdmin.length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -229,4 +229,4 @@ function DataTable({ columns, data: values }) {
   );
 }
 
-export default DataTable;
+export default DataTableAdmin;

@@ -5,18 +5,18 @@ import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-const FormEdit = ({ data }) => {
+const form = () => {
   const [form, setForm] = useState({
-    title: data?.title || "",
-    description: data?.description || "",
-    price: data?.price || "",
+    title: "",
+    description: "",
+    price: "",
   });
-
-  const [file, setFile] = useState(data?.imageUrls[0]?.url || null);
+  const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
-
   const { edgestore } = useEdgeStore();
+  const [temp, setTemp] = useState({ url: "", size: 0 });
 
+  // input form
   const onChanges = (e) => {
     setForm((prev) => ({
       ...prev,
@@ -24,63 +24,70 @@ const FormEdit = ({ data }) => {
     }));
   };
 
+  // make upload tempory image
   const onChangeFile = async (file) => {
-    setFile(file);
+    try {
+      setFile(file);
+      const res = await edgestore.publicFiles.upload({
+        file,
+        options: {
+          temporary: true,
+        },
+        onProgressChange: (progress) => {
+          // you can use this to show a progress bar
+          console.log(progress);
+          setProgress(progress);
+        },
+      });
+      setTemp({ url: res?.url, size: res?.size });
+    } catch (error) {
+      console.log({ error });
+      setTemp({ url: "", size: 0 });
+      setFile(null);
+    }
   };
 
+  // submit all to database products
   const submitForm = async (e) => {
     e.preventDefault();
-    const { title, description, price } = form;
 
     try {
-      if (title && description && price) {
-        let newFile = null;
+      const { title, description, price } = form;
+      const { url, size } = temp;
 
-        // Pengecekan objek
-        if (typeof file === "object" && file !== null && !Array.isArray(file)) {
-          const res = await edgestore.publicFiles.upload({
-            file,
-            options: {
-              replaceTargetUrl: data?.imageUrls[0]?.url,
-            },
-            onProgressChange: (progress) => {
-              // you can use this to show a progress bar
-              setProgress(progress);
-            },
-          });
-
-          newFile = {
-            url: res?.url,
-            size: res?.size,
-          };
-        }
+      if (title && description && price && file) {
+        // file save to edgestore
+        await edgestore.publicFiles.confirmUpload({
+          url,
+        });
 
         // you can run some server action or api here
         // to add the necessary data to your database
-
-        const req = await fetch(`/api/products/${data?.id}`, {
-          method: "PUT",
+        const req = await fetch("/api/products/", {
+          method: "POST",
           body: JSON.stringify({
             title,
             description,
             price,
             files: {
-              ...(newFile
-                ? { ...newFile }
-                : {
-                    url: data?.imageUrls[0]?.url,
-                    size: data?.imageUrls[0]?.size,
-                  }),
+              url,
+              size,
             },
-            slug: data?.catSlug,
           }),
         });
+
+        if (!req.ok) {
+          throw new Error("Network response was not ok");
+        }
 
         const response = await req.json();
         return response;
       }
     } catch (error) {
       console.log({ error });
+      await edgestore.publicFiles.delete({
+        url: temp?.url,
+      });
       return error;
     } finally {
       setFile(null);
@@ -90,7 +97,7 @@ const FormEdit = ({ data }) => {
 
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isError, error } = useMutation({
     mutationFn: submitForm,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["products"] });
@@ -101,13 +108,12 @@ const FormEdit = ({ data }) => {
     onSuccess: (data, variables, context) => {
       // Optimistically update to the new value
 
-      queryClient.setQueryData(["products"], (prev) => {
-        const updatedProducts = [...prev];
-        const idx = prev.findIndex((p) => p.id === data?.id);
-        updatedProducts[idx] = data;
+      if (data?.message) {
+        queryClient.setQueryData(["products"], context.previousProducts);
+      } else {
+        queryClient.setQueryData(["products"], (prev) => [...prev, data]);
+      }
 
-        return updatedProducts;
-      });
       return data;
     },
 
@@ -115,15 +121,17 @@ const FormEdit = ({ data }) => {
       queryClient.setQueryData(["products"], context.previousProducts);
     },
 
+    // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
+    mutationKey: ["addProduct"],
   });
 
   return (
     <FormModal
-      title={"Edit Product"}
-      method={"PUT"}
+      title={"Add Product"}
+      method={"POST"}
       progress={progress}
       onChanges={onChanges}
       submitForm={mutate}
@@ -135,4 +143,4 @@ const FormEdit = ({ data }) => {
   );
 };
 
-export default FormEdit;
+export default form;

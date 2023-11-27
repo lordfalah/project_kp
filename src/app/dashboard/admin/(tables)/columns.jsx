@@ -4,10 +4,20 @@ import Edit from "@/assets/icon/Edit";
 import Trash from "@/assets/icon/Trash";
 import { SpringModal } from "@/components/Modal";
 import { useEdgeStore } from "@/libs/edgestore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowUpDown } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import FormEdit from "./formEdit";
 import { NavigateOpen } from "@/utils/hooks/useOpenNav";
+import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useSession } from "next-auth/react";
+import { Fragment } from "react";
 
 const deleteProduct = async (id) => {
   try {
@@ -17,6 +27,27 @@ const deleteProduct = async (id) => {
     return res;
   } catch (error) {
     console.log(error);
+    return error;
+  }
+};
+
+const onUpdateRole = async ({ role, id }) => {
+  try {
+    const req = await fetch(`/api/account/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        role,
+      }),
+    });
+
+    if (!req.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    return res;
+  } catch (error) {
+    console.log(error);
+    return error;
   }
 };
 
@@ -31,45 +62,69 @@ const deleteProduct = async (id) => {
 //   }
 // };
 
-export const columns = [
+export const columnsAdmin = [
   {
     header: "No",
     cell: ({ row }) => <span className="font-medium">{row?.index + 1}</span>,
   },
 
   {
-    accessorKey: "title",
-    header: ({ column }) => {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "image",
+    header: "Image",
+    cell: ({ row }) => {
       return (
-        <button
-          type="button"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex gap-x-1.5 items-center"
-        >
-          <span>Title</span>
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </button>
+        <Image
+          width={150}
+          height={150}
+          src={row?.original?.image}
+          alt={row?.original?.name}
+          className="w-8 h-8 aspect-square rounded-full"
+          style={{ objectFit: "cover" }}
+        />
       );
     },
   },
   {
-    accessorKey: "description",
-    header: "Description",
-  },
-  {
-    accessorKey: "price",
-    header: "Price",
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
+    accessorKey: "role",
+    header: "Role",
     cell: ({ row }) => {
-      const date = new Date(row.getValue("createdAt"));
-      const formatted = date.toLocaleDateString();
-      return <div className="font-medium">{formatted}</div>;
+      const { data: session } = useSession();
+      const role = session?.token?.role.toUpperCase();
+
+      return (
+        <Fragment>
+          {role === "SUPER ADMIN" ? (
+            <Select
+              onValueChange={(role) =>
+                onUpdateRole({ role, id: row?.original?.id })
+              }
+            >
+              <SelectTrigger className="w-[140px] !border-0 !ring-0">
+                <SelectValue placeholder={`${row?.original?.role}`} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="USER">USER</SelectItem>
+                  <SelectItem value="ADMIN">ADMIN</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          ) : (
+            <div>{row?.original?.role}</div>
+          )}
+        </Fragment>
+      );
     },
   },
+
   {
     id: "action",
     accessorKey: "action",
@@ -99,13 +154,6 @@ export const columns = [
 
       return (
         <div className="flex gap-x-4">
-          <NavigateOpen>
-            <Edit row={row} />
-            <SpringModal>
-              <FormEdit data={row?.original} />
-            </SpringModal>
-          </NavigateOpen>
-
           <button
             type="button"
             onClick={async () => {

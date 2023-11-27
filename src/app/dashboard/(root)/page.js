@@ -1,37 +1,31 @@
 import Cards from "@/components/dashboard/Cards";
 import Header from "@/components/dashboard/Header";
 import prisma from "@/libs/prisma";
-import { getServerSession } from "next-auth/next";
 import getQueryClient from "@/utils/query/getQueryClient";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import DataTableAdmin from "./(tables)/data-table";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import DataTableDashboard from "./(tables)/data-table";
 
 export const revalidate = 0;
-export const getUsers = async () => {
-  const session = await getServerSession(authOptions);
-  const role = session?.token?.role.toUpperCase();
-  const response = await prisma.user.findMany({
-    where: {
-      role:
-        role === "ADMIN"
-          ? "USER"
-          : role === "SUPER ADMIN"
-          ? { in: ["USER", "ADMIN"] }
-          : "",
-    },
-  });
-
-  return response;
+export const getOrders = async () => {
+  try {
+    const response = await prisma.order.findMany({
+      include: {
+        user: true,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error;
+  }
 };
 
 export default async function page() {
   // Inisialisasi QueryClient
   const queryClient = getQueryClient();
 
-  const data = await queryClient.fetchQuery({
-    queryKey: ["users"],
-    queryFn: getUsers,
+  await queryClient.fetchQuery({
+    queryKey: ["orders"],
+    queryFn: getOrders,
   });
 
   return (
@@ -41,7 +35,7 @@ export default async function page() {
         <Cards />
 
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <DataTableAdmin />
+          <DataTableDashboard />
         </HydrationBoundary>
       </div>
     </main>

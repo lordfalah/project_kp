@@ -125,6 +125,7 @@ const form = () => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
+    mutationKey: ["addProduct"],
   });
 
   return (

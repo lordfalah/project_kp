@@ -1,6 +1,5 @@
 "use client";
-
-import Xmark from "@/assets/icon/Xmark";
+import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/Container";
 import { formatRupiah } from "@/utils/format";
 import { CartContext } from "@/utils/hooks/useCart";
@@ -8,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment, useContext } from "react";
 
-const TableShop = () => {
+const TableOrder = () => {
   const { state: cart, dispatch } = useContext(CartContext);
 
   const removeProduct = (id) => {
@@ -36,22 +35,42 @@ const TableShop = () => {
     }
   };
 
+  const getOrder = async () => {
+    try {
+      const req = await fetch("/api/order/", { method: "GET" });
+      const res = await req.json();
+
+      return res[0];
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["myOrder"],
+    queryFn: getOrder,
+    refetchInterval: 3000,
+  });
+
   return (
     <Container className="mx-auto xl:!max-w-7xl px-4 sm:px-0">
       <h4 className="font-sans font-normal text-[26px] md:text-[22px] lg:text-[26px] mb-0 md:mb-6">
-        Shopping Cart
+        Order Status
       </h4>
       <div className="hidden md:grid grid-cols-5 gap-4 font-sans text-base text-[#000000]">
         <p>Photo</p>
         <p>Product</p>
         <p>Price</p>
         <p>Quantity</p>
-        <p className="text-center">Action</p>
+        <p>Status</p>
       </div>
       <hr className="mt-3 mb-5" />
 
       <Fragment>
-        {cart?.products?.length <= 0 ? (
+        {isLoading ? (
+          <h1>Loading</h1>
+        ) : Object.keys(data).length === 0 ? (
           <div className="text-center my-10">
             <p>
               Ooops... Cart is{" "}
@@ -63,7 +82,7 @@ const TableShop = () => {
         ) : (
           <form method="POST" onSubmit={handleSubmit}>
             <div className="grid grid-cols-5 gap-4 items-center">
-              {cart?.products?.map((product, idx) => (
+              {data?.products?.map((product, idx) => (
                 <Fragment key={idx}>
                   <div className="col-span-2 md:col-span-1 w-full h-24 lg:w-36 md:h-36">
                     <Image
@@ -94,13 +113,7 @@ const TableShop = () => {
                     {product.quantity}
                   </h5>
 
-                  <button
-                    onClick={() => removeProduct(product.id)}
-                    type="button"
-                    className="w-fit mx-auto col-span-1"
-                  >
-                    <Xmark className="stroke-[#E0195D] transition ease-in-out duration-150 stroke-2 hover:stroke-[2.5] hover:stroke-red-500 cursor-pointer" />
-                  </button>
+                  <div>{data?.status}</div>
                 </Fragment>
               ))}
 
@@ -159,4 +172,4 @@ const TableShop = () => {
   );
 };
 
-export default TableShop;
+export default TableOrder;

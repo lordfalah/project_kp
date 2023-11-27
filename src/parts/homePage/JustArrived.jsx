@@ -7,6 +7,7 @@ import { customSlickSett, formatRupiah } from "@/utils/format";
 import Container from "@/components/Container";
 import useLongPress from "@/utils/hooks/useLongPress";
 import Link from "next/link";
+import Image from "next/image";
 
 const settings = customSlickSett(
   {
@@ -62,81 +63,7 @@ const Loadings = () => {
   );
 };
 
-const JustArrived = () => {
-  const products = [
-    {
-      id: 1,
-      idc: 3,
-      title: "Chair Thatty",
-      price: 12000000,
-      imageUrl:
-        "https://luxspace-html.netlify.app/images/content/showcase-1.front.jpg",
-    },
-    {
-      id: 2,
-      idc: 3,
-      title: "Cangkir Mauttie",
-      price: 89300,
-      imageUrl:
-        "https://luxspace-html.netlify.app/images/content/image-arrived-1.png",
-    },
-    {
-      id: 3,
-      idc: 3,
-      title: "Buku Sidu Edition",
-      price: 120699,
-      imageUrl:
-        "https://luxspace-html.netlify.app/images/content/image-arrived-3.png",
-    },
-    {
-      id: 4,
-      idc: 3,
-      title: "Watch Notes X",
-      price: 1973000,
-      imageUrl:
-        "https://luxspace-html.netlify.app/images/content/image-arrived-4.png",
-    },
-    {
-      id: 5,
-      idc: 3,
-      title: "Sweet Modern Dinning Table",
-      price: 599400,
-      imageUrl:
-        "https://images.unsplash.com/photo-1554295405-abb8fd54f153?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=562&q=80",
-    },
-    {
-      id: 6,
-      idc: 3,
-      title: "Bankyu Minimay",
-      price: 67899,
-      imageUrl:
-        "https://luxspace-html.netlify.app/images/content/image-arrived-2.png",
-    },
-    {
-      id: 7,
-      idc: 8,
-      title: "Gray White Padded Sofa",
-      price: 89999999,
-      imageUrl:
-        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=701&q=80",
-    },
-    {
-      id: 8,
-      idc: 1,
-      title: "Teal Wooden Cabiner",
-      price: 1298599,
-      imageUrl:
-        "https://images.unsplash.com/photo-1513161455079-7dc1de15ef3e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-    },
-    {
-      id: 9,
-      idc: 2,
-      title: "Classy Wooden Chair",
-      price: 859000,
-      imageUrl:
-        "https://images.unsplash.com/photo-1487015307662-6ce6210680f1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=632&q=80",
-    },
-  ];
+const JustArrived = ({ products }) => {
   // const navigation = useNavigation();
   // const navigate = useNavigate("");
 
@@ -171,10 +98,14 @@ const JustArrived = () => {
             className={`card relative z-30 px-4 group hover:cursor-grab focus:cursor-grabbing`}
           >
             <div className="w-[280px] h-[386px] relative rounded-xl overflow-hidden group-hover:shadow-lg transition duration-200 ease-in-out mx-auto">
-              <div
-                style={{ backgroundImage: `url(${data.imageUrl})` }}
+              <Image
+                src={data.imageUrls[0].url}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="w-full h-full bg-cover bg-no-repeat bg-center group-hover:scale-125 transition duration-300 ease-in-out"
-              ></div>
+                style={{ objectFit: "cover" }}
+                alt={`image ${data?.title}`}
+              />
 
               <div className="transition duration-200 ease-in-out absolute inset-0 opacity-0 group-hover:opacity-100 bg-black/[35%] w-full h-full flex justify-center items-center">
                 <div className="rounded-full bg-white w-16 h-16 flex justify-center items-center">

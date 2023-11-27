@@ -22,6 +22,12 @@ export const nav_link = {
       path: "/dashboard/admin",
       icon: <Table className="w-5 h-5 stroke-orange-400/90" />,
     },
+
+    {
+      name: "Table Products",
+      path: "/dashboard/product",
+      icon: <Table className="w-5 h-5 stroke-orange-400/90" />,
+    },
   ],
 
   route_auth: {

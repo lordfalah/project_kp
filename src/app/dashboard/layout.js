@@ -1,8 +1,7 @@
-"use client";
-
 import SideNav from "@/components/dashboard/SideNav";
 import { NavigateOpen } from "@/utils/hooks/useOpenNav";
-import React, { useState } from "react";
+import Providers from "@/utils/query/Providers";
+import React from "react";
 
 const DashboardLayout = ({ children }) => {
   return (

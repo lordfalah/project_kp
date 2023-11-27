@@ -5,6 +5,12 @@ import { Input } from "../ui/input";
 import { SingleImageDropzone } from "../uploads/SingleImageDropzone";
 import { OpenNav } from "@/utils/hooks/useOpenNav";
 
+function checkObjectValidity(obj) {
+  return Boolean(
+    obj.progress === 100 && obj.title && obj.description && obj.price
+  );
+}
+
 const FormModal = ({
   title,
   method,
@@ -89,9 +95,14 @@ const FormModal = ({
         <div className="flex flex-row-reverse">
           <div className="flex-initial pl-3">
             <button
+              disabled={!checkObjectValidity({ ...form, progress })}
               onClick={() => setIsOpen(false)}
               type="submit"
-              className="bg-gradient-to-r from-violet-600 to-blue-500 font-medium px-5 py-2.5 rounded hover:opacity-90 transition-opacity"
+              className={`bg-gradient-to-r from-violet-600 to-blue-500 font-medium px-5 py-2.5 rounded ${
+                !checkObjectValidity({ ...form, progress })
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer hover:opacity-90 transition-opacity"
+              }`}
             >
               <span className="pl-2 mx-1">Save</span>
             </button>

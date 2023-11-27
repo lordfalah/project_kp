@@ -1,10 +1,10 @@
-import User from "@/assets/icon/User";
 import React from "react";
 import BurgerMenu from "../BurgerMenu";
-import { OpenNav } from "@/utils/hooks/useOpenNav";
 import BreadCrumb from "./BreadCrumb";
+import AuthStatus from "../AuthStatus";
+import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 
-const Header = () => {
+const Header = async () => {
   return (
     <nav
       className="relative flex flex-wrap items-center justify-between px-0 py-2 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
@@ -16,8 +16,7 @@ const Header = () => {
         <div className="flex items-center lg:flex lg:basis-auto justify-between">
           <ul className="flex flex-row justify-end gap-x-3 list-none md-max:w-full">
             <li className="flex items-center gap-x-3.5">
-              <User className="w-5 h-5 fill-white stroke-none" />
-              <span className="hidden sm:inline text-white">Sign In</span>
+              <AuthStatus />
             </li>
             <li className="flex items-center xl:hidden">
               <BurgerMenu />

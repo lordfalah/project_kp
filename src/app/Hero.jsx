@@ -64,15 +64,17 @@ const Hero = () => {
             <div className="flex flex-col">
               <Image
                 src="/images/content/image-section-1.png"
-                className="absolute -z-20 inset-0 md:relative object-cover object-center h-full md:w-full md:h-full"
-                alt=""
+                className="absolute -z-20 inset-0 md:relative h-full md:w-full md:h-full"
+                alt="bg"
                 sizes="100vw"
                 style={{
                   width: "100%",
                   height: "100%",
+                  objectFit: "cover",
                 }}
-                width={0}
-                height={0}
+                width={400}
+                height={400}
+                priority
               />
             </div>
           </div>

@@ -34,3 +34,8 @@ export async function POST(req, res) {
     return NextResponse.json({ message: error }, { status: 400 });
   }
 }
+
+export async function GET(req) {
+  const product = await prisma.products.findMany();
+  return NextResponse.json(product, { status: 200 });
+}

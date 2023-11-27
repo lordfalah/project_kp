@@ -4,6 +4,8 @@ import React, { Fragment, useState } from "react";
 import Container from "./Container";
 import Link from "next/link";
 import ShoppingCart from "@/assets/icon/ShoppingCart";
+import { signOut } from "next-auth/react";
+import AuthStatus from "./AuthStatus";
 
 const Header = ({ category = [] }) => {
   const inView = true;
@@ -19,14 +21,8 @@ const Header = ({ category = [] }) => {
       to: "html",
     },
     {
-      title: "Delivery",
-      path: "/",
-      to: "#clients",
-    },
-
-    {
-      title: "Rewards",
-      path: "/",
+      title: "Order",
+      path: "/order",
       to: "html",
     },
 
@@ -42,9 +38,9 @@ const Header = ({ category = [] }) => {
     },
   ];
 
-  const handleScrollToTop = async (tags) => {
+  const handleScrollToTop = (tags) => {
     try {
-      const elm = await document.querySelector(tags);
+      const elm = document.querySelector(tags);
       elm.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -156,6 +152,7 @@ const Header = ({ category = [] }) => {
                     onClick={() => {
                       setToggle(false);
                       handleScrollToTop(to);
+                      console.log(to);
                     }}
                     style={{
                       transition:
@@ -170,7 +167,11 @@ const Header = ({ category = [] }) => {
                       toggle ? "hover:scale-125 hover:text-black/75" : ""
                     }`}
                   >
-                    <Link href={path} className={`relative block `}>
+                    <Link
+                      scroll={false}
+                      href={path}
+                      className={`relative block`}
+                    >
                       {idx === 4 ? (
                         <Fragment>
                           <span
@@ -191,6 +192,10 @@ const Header = ({ category = [] }) => {
                     </Link>
                   </li>
                 ))}
+
+                <li className="flex gap-x-3.5 items-center justify-center">
+                  <AuthStatus />
+                </li>
               </ul>
             </div>
           </nav>

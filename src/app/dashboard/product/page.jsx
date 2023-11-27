@@ -1,22 +1,25 @@
 import Cards from "@/components/dashboard/Cards";
 import Header from "@/components/dashboard/Header";
-import prisma from "@/libs/prisma";
-import { columns } from "./(tables)/columns";
-import DataTable from "./(tables)/data-table";
-
 import getQueryClient from "@/utils/query/getQueryClient";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import prisma from "@/libs/prisma";
+import DataTableProducts from "./(tables)/data-table";
 
 export const revalidate = 0;
 export const getProducts = async () => {
-  const response = await prisma.products.findMany();
-  return response;
+  try {
+    const response = await prisma.products.findMany();
+    return response;
+  } catch (error) {
+    return error;
+  }
 };
 
 export default async function page() {
   // Inisialisasi QueryClient
   const queryClient = getQueryClient();
 
-  const data = await queryClient.fetchQuery({
+  const products = await queryClient.fetchQuery({
     queryKey: ["products"],
     queryFn: getProducts,
   });
@@ -27,7 +30,9 @@ export default async function page() {
         <Header />
         <Cards />
 
-        <DataTable columns={columns} data={data} />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <DataTableProducts />
+        </HydrationBoundary>
       </div>
     </main>
   );
