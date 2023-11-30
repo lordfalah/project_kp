@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { Input } from "../ui/input";
 import { SingleImageDropzone } from "../uploads/SingleImageDropzone";
 import { OpenNav } from "@/utils/hooks/useOpenNav";
+import { DialogClose, DialogFooter } from "../ui/dialog";
 
 function checkObjectValidity(obj) {
   return Boolean(
@@ -25,7 +26,7 @@ const FormModal = ({
 
   return (
     <form onSubmit={submitForm} method={method}>
-      <div className="bg-white rounded-lg shadow p-4">
+      <div>
         <div className="flex flex-col items-center gap-y-4">
           <h4 className="text-black text-3xl !place-self-start">{title}</h4>
           <SingleImageDropzone
@@ -93,29 +94,22 @@ const FormModal = ({
 
         <hr className="mt-4" />
         <div className="flex flex-row-reverse">
-          <div className="flex-initial pl-3">
-            <button
-              disabled={!checkObjectValidity({ ...form, progress })}
-              onClick={() => setIsOpen(false)}
-              type="submit"
-              className={`bg-gradient-to-r from-violet-600 to-blue-500 font-medium px-5 py-2.5 rounded ${
-                !checkObjectValidity({ ...form, progress })
-                  ? "opacity-50 cursor-not-allowed"
-                  : "cursor-pointer hover:opacity-90 transition-opacity"
-              }`}
-            >
-              <span className="pl-2 mx-1">Save</span>
-            </button>
-          </div>
-          <div className="flex-initial">
-            <button
-              onClick={() => setIsOpen(false)}
-              type="button"
-              className="flex items-center px-5 py-2.5 font-medium tracking-wide text-black capitalize rounded-md  hover:bg-red-200 hover:fill-current hover:text-red-600  focus:outline-none  transition duration-300 transform active:scale-95 ease-in-out"
-            >
-              <span className="pl-2 mx-1">Cancel</span>
-            </button>
-          </div>
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <button
+                disabled={!checkObjectValidity({ ...form, progress })}
+                onClick={() => setIsOpen(false)}
+                type="submit"
+                className={`bg-gradient-to-r from-violet-600 to-blue-500 font-medium w-32 py-2.5 rounded ${
+                  !checkObjectValidity({ ...form, progress })
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer hover:opacity-90 transition-opacity"
+                }`}
+              >
+                <span className="pl-2 mx-1">Save</span>
+              </button>
+            </DialogClose>
+          </DialogFooter>
         </div>
       </div>
     </form>

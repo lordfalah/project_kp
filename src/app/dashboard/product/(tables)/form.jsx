@@ -1,11 +1,13 @@
 "use client";
 
 import FormModal from "@/components/dashboard/FormModal";
+import { useToast } from "@/components/ui/use-toast";
 import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 const form = () => {
+  const { toast } = useToast();
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -79,14 +81,23 @@ const form = () => {
         if (!req.ok) {
           throw new Error("Network response was not ok");
         }
-
+        toast({
+          title: "Success",
+          description: "Data Product berhasil di tambah",
+        });
         const response = await req.json();
         return response;
       }
     } catch (error) {
-      console.log({ error });
       await edgestore.publicFiles.delete({
         url: temp?.url,
+      });
+
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error?.message || "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       return error;
     } finally {

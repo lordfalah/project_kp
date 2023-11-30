@@ -47,7 +47,7 @@ export const nav_link = {
   },
 };
 
-const SideNav = () => {
+const SideNav = ({ className = "" }) => {
   const pathname = usePathname();
   const { isOpen, setIsOpen } = useContext(OpenNav);
 
@@ -64,7 +64,7 @@ const SideNav = () => {
   return (
     <aside
       ref={menuRef}
-      className={`fixed inset-y-4 pb-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-[280px] rounded-2xl xl:translate-x-0 w-full z-50 ${
+      className={`fixed lg:my-6 inset-y-4 pb-4 overflow-y-auto antialiased ${className}transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-[280px] rounded-2xl xl:translate-x-0 w-full z-50 ${
         isOpen ? "translate-x-0 ml-6" : "-translate-x-full xl:ml-6"
       }`}
       aria-expanded="false"

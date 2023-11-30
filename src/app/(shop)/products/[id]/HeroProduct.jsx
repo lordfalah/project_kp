@@ -2,19 +2,33 @@
 
 import ShoppingCart from "@/assets/icon/ShoppingCart";
 import Container from "@/components/Container";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { CartContext } from "@/utils/context/CartContex";
 import { formatRupiah } from "@/utils/format";
-import { CartContext } from "@/utils/hooks/useCart";
+
 import Image from "next/image";
 import React, { useContext, useState } from "react";
 
 const HeroProduct = ({ product }) => {
   const { state, dispatch } = useContext(CartContext);
+  const { toast } = useToast();
 
   const onAddProduct = async (product) => {
     try {
       dispatch({ type: "ADD_PRODUCT", payload: product });
+
+      toast({
+        title: "Success",
+        description: "Product berhasil di tambah",
+      });
     } catch (error) {
-      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error?.message || "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
     }
   };
 

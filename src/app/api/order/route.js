@@ -28,6 +28,11 @@ export async function POST(req, res) {
 
 export async function GET(req) {
   try {
+    const { token } = await getAuthSession();
+    if (!token) {
+      return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
+    }
+
     const orders = await prisma.order.findMany({
       include: {
         user: true,

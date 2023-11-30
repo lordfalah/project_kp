@@ -2,14 +2,17 @@
 
 import Xmark from "@/assets/icon/Xmark";
 import Container from "@/components/Container";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { CartContext } from "@/utils/context/CartContex";
 import { formatRupiah } from "@/utils/format";
-import { CartContext } from "@/utils/hooks/useCart";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment, useContext } from "react";
 
 const TableShop = () => {
   const { state: cart, dispatch } = useContext(CartContext);
+  const { toast } = useToast();
 
   const removeProduct = (id) => {
     dispatch({ type: "REMOVE_PRODUCT", payload: id });
@@ -29,10 +32,28 @@ const TableShop = () => {
         }),
       });
 
+      if (!req.ok) {
+        throw new Error(req.statusText | "");
+      }
+
       const res = await req.json();
-      console.log({ res });
+      toast({
+        title: "Success",
+        description: "Checkout berhasil di tambah",
+        action: (
+          <ToastAction altText="link">
+            <Link href={"/order"}>Cek Status</Link>
+          </ToastAction>
+        ),
+      });
+      return res;
     } catch (error) {
-      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error?.message || "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
     }
   };
 
@@ -72,6 +93,7 @@ const TableShop = () => {
                       height={200}
                       alt={product.title}
                       className="w-full h-full object-cover object-center rounded-xl"
+                      priority
                     />
                   </div>
                   <div className="col-span-2 md:col-span-1">

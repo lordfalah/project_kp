@@ -2,9 +2,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { EdgeStoreProvider } from "@/libs/edgestore";
 import Providers from "@/utils/query/Providers";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import NextAuthProvider from "@/utils/context/NextAuthProvider";
-import { CartOrderContext } from "@/utils/hooks/useCart";
+import { CartOrderContext } from "@/utils/context/CartContex";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +23,11 @@ export default function RootLayout({ children }) {
             <EdgeStoreProvider>
               <CartOrderContext>{children}</CartOrderContext>
             </EdgeStoreProvider>
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            <ReactQueryDevtools initialIsOpen={false} />
           </Providers>
         </NextAuthProvider>
+
+        <Toaster />
       </body>
     </html>
   );

@@ -1,12 +1,8 @@
 "use client";
 
-import Edit from "@/assets/icon/Edit";
 import Trash from "@/assets/icon/Trash";
-import { SpringModal } from "@/components/Modal";
 import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import FormEdit from "./formEdit";
-import { NavigateOpen } from "@/utils/hooks/useOpenNav";
 import Image from "next/image";
 import {
   Select,
@@ -18,16 +14,21 @@ import {
 } from "@/components/ui/select";
 import { useSession } from "next-auth/react";
 import { Fragment } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
-const deleteProduct = async (id) => {
+const deleteUser = async (id) => {
   try {
-    const req = await fetch(`/api/products/${id}`, { method: "DELETE" });
+    const req = await fetch(`/api/account/${id}`, { method: "DELETE" });
+    if (!req.ok) {
+      throw new Error("Network response was not ok");
+    }
+
     const res = await req.json();
 
     return res;
   } catch (error) {
-    console.log(error);
-    return error;
+    throw new Error(error?.message);
   }
 };
 
@@ -44,23 +45,11 @@ const onUpdateRole = async ({ role, id }) => {
       throw new Error("Network response was not ok");
     }
 
-    return res;
+    return await req.json();
   } catch (error) {
-    console.log(error);
-    return error;
+    throw new Error(error?.message);
   }
 };
-
-// const getProduct = async (id) => {
-//   try {
-//     const req = await fetch(`/api/products/${id}`, { method: "GET" });
-//     const res = await req.json();
-
-//     return res;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const columnsAdmin = [
   {
@@ -96,6 +85,7 @@ export const columnsAdmin = [
     accessorKey: "role",
     header: "Role",
     cell: ({ row }) => {
+      const { toast } = useToast();
       const { data: session } = useSession();
       const role = session?.token?.role.toUpperCase();
 
@@ -103,9 +93,26 @@ export const columnsAdmin = [
         <Fragment>
           {role === "SUPER ADMIN" ? (
             <Select
-              onValueChange={(role) =>
-                onUpdateRole({ role, id: row?.original?.id })
-              }
+              onValueChange={async (role) => {
+                try {
+                  await onUpdateRole({ role, id: row?.original?.id });
+                  toast({
+                    title: "Success",
+                    description: "Role berhasil di edit",
+                  });
+                } catch (error) {
+                  toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description:
+                      error?.message ||
+                      "There was a problem with your request.",
+                    action: (
+                      <ToastAction altText="Try again">Try again</ToastAction>
+                    ),
+                  });
+                }
+              }}
             >
               <SelectTrigger className="w-[140px] !border-0 !ring-0">
                 <SelectValue placeholder={`${row?.original?.role}`} />
@@ -130,25 +137,29 @@ export const columnsAdmin = [
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => {
+      const { toast } = useToast();
       const queryClient = useQueryClient();
-      const { edgestore } = useEdgeStore();
 
       const mutation = useMutation({
-        mutationFn: deleteProduct,
+        mutationFn: deleteUser,
         onMutate: async (id) => {
-          await queryClient.cancelQueries({ queryKey: ["products"] });
-          const previousProducts = queryClient.getQueryData(["products"]);
+          await queryClient.cancelQueries({ queryKey: ["users"] });
+          const previousUsers = queryClient.getQueryData(["users"]);
 
-          queryClient.setQueryData(["products"], () =>
-            previousProducts.filter((posts) => posts?.id !== id)
+          queryClient.setQueryData(["users"], () =>
+            previousUsers.filter((user) => user?.id !== id)
           );
 
-          return { previousProducts };
+          return { previousUsers };
+        },
+        onError: (err, newTodo, context) => {
+          queryClient.setQueryData("users", context.previousUsers);
+          // queryClient.invalidateQueries({ queryKey: ["products"] });
         },
 
         // Always refetch after error or success:
         onSettled: () => {
-          queryClient.invalidateQueries({ queryKey: ["products"] });
+          queryClient.invalidateQueries({ queryKey: ["users"] });
         },
       });
 
@@ -157,13 +168,23 @@ export const columnsAdmin = [
           <button
             type="button"
             onClick={async () => {
+              console.log(row?.original?.id);
               try {
                 mutation.mutate(row?.original?.id);
-                await edgestore.publicFiles.delete({
-                  url: row?.original?.imageUrls[0]?.url,
+                toast({
+                  title: "Success",
+                  description: "Tabel admin berhasil di hapus",
                 });
               } catch (error) {
-                console.log(error);
+                toast({
+                  variant: "destructive",
+                  title: "Uh oh! Something went wrong.",
+                  description:
+                    error?.message || "There was a problem with your request.",
+                  action: (
+                    <ToastAction altText="Try again">Try again</ToastAction>
+                  ),
+                });
               }
             }}
           >

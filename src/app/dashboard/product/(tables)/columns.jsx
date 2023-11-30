@@ -2,34 +2,30 @@
 
 import Edit from "@/assets/icon/Edit";
 import Trash from "@/assets/icon/Trash";
-import { SpringModal } from "@/components/Modal";
 import { useEdgeStore } from "@/libs/edgestore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
 import FormEdit from "./formEdit";
-import { NavigateOpen } from "@/utils/hooks/useOpenNav";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const deleteProduct = async (id) => {
   try {
     const req = await fetch(`/api/products/${id}`, { method: "DELETE" });
+    if (!req.ok) throw new Error(req?.statusText || "");
     const res = await req.json();
 
     return res;
   } catch (error) {
-    console.log(error);
+    throw new Error(error?.message || "");
   }
 };
-
-// const getProduct = async (id) => {
-//   try {
-//     const req = await fetch(`/api/products/${id}`, { method: "GET" });
-//     const res = await req.json();
-
-//     return res;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const columnsProducts = [
   {
@@ -75,6 +71,7 @@ export const columnsProducts = [
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => {
+      const { toast } = useToast();
       const queryClient = useQueryClient();
       const { edgestore } = useEdgeStore();
 
@@ -91,20 +88,24 @@ export const columnsProducts = [
           return { previousProducts };
         },
 
-        // Always refetch after error or success:
-        onSettled: () => {
+        onError: (err, newTodo, context) => {
+          queryClient.setQueryData("products", context.previousProducts);
           queryClient.invalidateQueries({ queryKey: ["products"] });
         },
       });
 
       return (
         <div className="flex gap-x-4">
-          <NavigateOpen>
-            <Edit row={row} />
-            <SpringModal>
-              <FormEdit data={row?.original} />
-            </SpringModal>
-          </NavigateOpen>
+          <Dialog>
+            <DialogTrigger>
+              <Edit />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <FormEdit data={row?.original} />
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
 
           <button
             type="button"
@@ -114,8 +115,22 @@ export const columnsProducts = [
                 await edgestore.publicFiles.delete({
                   url: row?.original?.imageUrls[0]?.url,
                 });
+
+                console.log("SUCCESS");
+                toast({
+                  title: "Success",
+                  description: "Data Product berhasil di hapus",
+                });
               } catch (error) {
-                console.log(error);
+                toast({
+                  variant: "destructive",
+                  title: "Uh oh! Something went wrong.",
+                  description:
+                    error?.message || "There was a problem with your request.",
+                  action: (
+                    <ToastAction altText="Try again">Try again</ToastAction>
+                  ),
+                });
               }
             }}
           >

@@ -2,27 +2,25 @@ import BreadCrumb from "@/components/BreadCrumb";
 import React from "react";
 import HeroProduct from "./HeroProduct";
 import AboutProduct from "./AboutProduct";
-import getQueryClient from "@/utils/query/getQueryClient";
 import prisma from "@/libs/prisma";
 import { redirect } from "next/navigation";
 
 const getProduct = async (id) => {
-  const response = await prisma.products.findFirst({
-    where: {
-      id,
-    },
-  });
+  try {
+    const response = await prisma.products.findFirst({
+      where: {
+        id,
+      },
+    });
 
-  return response;
+    return response;
+  } catch (error) {
+    return null;
+  }
 };
 
 const page = async ({ params }) => {
-  const queryClient = getQueryClient();
-
-  const product = await queryClient.fetchQuery({
-    queryKey: ["products"],
-    queryFn: () => getProduct(params?.id),
-  });
+  const product = await getProduct(params?.id);
 
   if (!product) {
     return redirect("/");

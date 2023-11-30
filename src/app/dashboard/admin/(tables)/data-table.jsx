@@ -29,16 +29,12 @@ import {
 } from "@/components/ui/select";
 
 import { Fragment, useState } from "react";
-import Search from "@/assets/icon/Search";
-import { ModalBtn, SpringModal } from "@/components/Modal";
-import Form from "./form";
-import { getUsers } from "../page";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import ChevronLeftDouble from "@/assets/icon/ChevronLeftDouble";
 import ChevronRightDouble from "@/assets/icon/ChevronRightDouble";
-import { NavigateOpen } from "@/utils/hooks/useOpenNav";
 import { columnsAdmin } from "./columns";
+import { clientApi } from "@/libs/server/action";
 
 function DataTableAdmin() {
   const [sorting, setSorting] = useState([]);
@@ -46,7 +42,7 @@ function DataTableAdmin() {
 
   const { data } = useQuery({
     queryKey: ["users"],
-    queryFn: getUsers,
+    queryFn: clientApi.getUsers,
   });
 
   const table = useReactTable({
@@ -78,15 +74,7 @@ function DataTableAdmin() {
           />
         </div>
 
-        <div className="col-span-2 justify-self-end">
-          <NavigateOpen>
-            <ModalBtn title={"Create"} />
-
-            <SpringModal>
-              <Form />
-            </SpringModal>
-          </NavigateOpen>
-        </div>
+        <div className="col-span-2 justify-self-end">{/* tittle */}</div>
       </div>
       <div className="rounded-md border bg-white my-6">
         <Table className="w-[700px] sm:w-full">
@@ -109,8 +97,8 @@ function DataTableAdmin() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+            {table?.getRowModel().rows?.length ? (
+              table?.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}

@@ -2,45 +2,23 @@
 import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/Container";
 import { formatRupiah } from "@/utils/format";
-import { CartContext } from "@/utils/hooks/useCart";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Fragment, useContext } from "react";
+import React, { Fragment } from "react";
 
-const TableOrder = () => {
-  const { state: cart, dispatch } = useContext(CartContext);
-
+const TableOrder = ({ id }) => {
   const removeProduct = (id) => {
     dispatch({ type: "REMOVE_PRODUCT", payload: id });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const status = "ORDER";
-      const req = await fetch("/api/order", {
-        method: "POST",
-        body: JSON.stringify({
-          price: cart.totalPrice,
-          products: cart.products,
-          status,
-        }),
-      });
-
-      const res = await req.json();
-      console.log({ res });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const getOrder = async () => {
     try {
-      const req = await fetch("/api/order/", { method: "GET" });
+      const req = await fetch(`/api/order/${id}`, {
+        method: "GET",
+      });
       const res = await req.json();
 
-      return res[0];
+      return res;
     } catch (error) {
       console.log(error);
       return null;
@@ -70,17 +48,8 @@ const TableOrder = () => {
       <Fragment>
         {isLoading ? (
           <h1>Loading</h1>
-        ) : Object.keys(data).length === 0 ? (
-          <div className="text-center my-10">
-            <p>
-              Ooops... Cart is{" "}
-              <Link href={"/"} className="underline underline-offset-2">
-                empty Shop Now!
-              </Link>
-            </p>
-          </div>
-        ) : (
-          <form method="POST" onSubmit={handleSubmit}>
+        ) : data && Object.keys(data).length !== 0 ? (
+          <form method="POST">
             <div className="grid grid-cols-5 gap-4 items-center">
               {data?.products?.map((product, idx) => (
                 <Fragment key={idx}>
@@ -116,56 +85,19 @@ const TableOrder = () => {
                   <div>{data?.status}</div>
                 </Fragment>
               ))}
-
-              <div className="flex flex-col sm:flex-row col-span-full w-full justify-between sm:items-center mb-40 mt-20 sm:mt-10 px-0 sm:px-4 xl:px-0">
-                <div>
-                  <p>Payment Option</p>
-                  <p>Cash</p>
-                </div>
-
-                <div>
-                  <div className="space-y-3 sm:w-fit my-8 sm:my-10 ">
-                    <div className="flex justify-between gap-x-6">
-                      <p className="font-semibold text-slate-400">
-                        Subtotal ({cart?.totalItems} items)
-                      </p>
-                      <p className="font-semibold">
-                        Rp {formatRupiah(cart?.totalPrice)}
-                      </p>
-                    </div>
-                    <div>
-                      <div className="flex justify-between gap-x-6">
-                        <p className="font-semibold text-slate-400">Total</p>
-                        <p className="font-semibold">
-                          Rp {formatRupiah(cart?.totalPrice)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`w-full sm:w-60 rounded-full text-center transition duration-150 ease-linear justify-self-end col-span-full ${
-                      cart?.products?.length <= 0
-                        ? "g-[#F0F0F0]"
-                        : "bg-[#F9CADA]  "
-                    }`}
-                  >
-                    <button
-                      type="submit"
-                      disabled={cart?.products?.length <= 0 ? true : false}
-                      className={`font-medium text-lg font-sans px-6 py-3   ${
-                        cart?.products?.length <= 0
-                          ? "cursor-not-allowed text-[#D2D2D2]"
-                          : "cursor-pointer text-black"
-                      }`}
-                    >
-                      Checkout Now
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </form>
+        ) : isError ? (
+          <h1>Error ashole</h1>
+        ) : (
+          <div className="text-center my-10">
+            <p>
+              Ooops... Cart is{" "}
+              <Link href={"/"} className="underline underline-offset-2">
+                empty Shop Now!
+              </Link>
+            </p>
+          </div>
         )}
       </Fragment>
     </Container>

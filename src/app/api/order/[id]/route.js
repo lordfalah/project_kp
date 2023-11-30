@@ -7,11 +7,13 @@ export async function PATCH(req, { params }) {
   try {
     const { status } = await req.json();
     const { token } = await getAuthSession();
+    if (!token)
+      return NextResponse.json({ message: "Not Authorized", status: 404 });
 
-    if (!token || !status)
+    if (!token || !status || !params.id)
       return NextResponse.json(
-        { message: "INTERNAL SERVER ERROR :(" },
-        { status: 500 }
+        { message: "Kolom Harus di isi!" },
+        { status: 400 }
       );
 
     if (token.role === "SUPER ADMIN" || token.role === "ADMIN") {
@@ -60,5 +62,23 @@ export async function DELETE(req, { params }) {
       { message: "INTERNAL SERVER ERROR :(" },
       { status: 500 }
     );
+  }
+}
+
+export async function GET(req, { params }) {
+  try {
+    const orders = await prisma.order.findFirst({
+      where: {
+        userId: params.id,
+      },
+
+      include: {
+        user: true,
+      },
+    });
+
+    return NextResponse.json(orders, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(null, { status: 500 });
   }
 }

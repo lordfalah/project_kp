@@ -34,3 +34,31 @@ export async function PATCH(req, { params }) {
     );
   }
 }
+
+export async function DELETE(req, { params }) {
+  try {
+    const { token } = await getAuthSession();
+
+    if (!token)
+      return NextResponse.json(
+        { message: "INTERNAL SERVER ERROR :(" },
+        { status: 500 }
+      );
+
+    if (token.role === "SUPER ADMIN") {
+      const user = await prisma.user.delete({
+        where: {
+          id: params.id,
+        },
+      });
+
+      return NextResponse.json(user, { status: 200 });
+    }
+    return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "INTERNAL SERVER ERROR :(" },
+      { status: 500 }
+    );
+  }
+}

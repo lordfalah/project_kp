@@ -10,7 +10,14 @@ import {
 } from "@tanstack/react-table";
 
 import { Input } from "@/components/ui/input";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -29,13 +36,11 @@ import {
 } from "@/components/ui/select";
 
 import { Fragment, useState } from "react";
-import { ModalBtn, SpringModal } from "@/components/Modal";
 import Form from "./form";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import ChevronLeftDouble from "@/assets/icon/ChevronLeftDouble";
 import ChevronRightDouble from "@/assets/icon/ChevronRightDouble";
-import { NavigateOpen } from "@/utils/hooks/useOpenNav";
 import { columnsProducts } from "./columns";
 import { clientApi } from "@/libs/server/action";
 
@@ -78,13 +83,16 @@ function DataTableProducts() {
         </div>
 
         <div className="col-span-2 justify-self-end">
-          <NavigateOpen>
-            <ModalBtn title={"Create"} />
-
-            <SpringModal>
-              <Form />
-            </SpringModal>
-          </NavigateOpen>
+          <Dialog>
+            <DialogTrigger className="bg-gradient-to-r from-violet-600 to-blue-500 text-white font-medium px-6 py-2 rounded hover:opacity-90 transition-opacity">
+              Create
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <Form />
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <div className="rounded-md border bg-white my-6">

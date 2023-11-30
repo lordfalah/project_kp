@@ -1,11 +1,14 @@
 "use client";
 
 import FormModal from "@/components/dashboard/FormModal";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 const FormEdit = ({ data }) => {
+  const { toast } = useToast();
   const [form, setForm] = useState({
     title: data?.title || "",
     description: data?.description || "",
@@ -82,10 +85,19 @@ const FormEdit = ({ data }) => {
         });
 
         const response = await req.json();
+        toast({
+          title: "Success",
+          description: "Data Product berhasil di edit",
+        });
         return response;
       }
     } catch (error) {
-      console.log({ error });
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error?.message || "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
       return error;
     } finally {
       setFile(null);
@@ -118,9 +130,6 @@ const FormEdit = ({ data }) => {
 
     onError: (err, newTodo, context) => {
       queryClient.setQueryData(["products"], context.previousProducts);
-    },
-
-    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
