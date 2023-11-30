@@ -37,7 +37,8 @@ export default async function page() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <DataTableAdmin />
+      {/* <DataTableAdmin /> */}
+      <h1>debug on admin</h1>
     </HydrationBoundary>
   );
 }
