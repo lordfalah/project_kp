@@ -22,7 +22,7 @@ export const getUsers = async () => {
 
     return response ? response : [];
   } catch (error) {
-    return null;
+    return [];
   }
 };
 
