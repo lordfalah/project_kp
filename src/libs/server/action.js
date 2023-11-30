@@ -4,7 +4,7 @@ const getProducts = async () => {
   try {
     const req = await fetch("/api/products", {
       method: "GET",
-      cache: "force-cache",
+      cache: "no-store",
     });
     if (!req?.ok) throw new Error("INTERNAL SERVER ERROR");
 
@@ -20,7 +20,7 @@ const getOrders = async () => {
   try {
     const req = await fetch("/api/order", {
       method: "GET",
-      cache: "force-cache",
+      cache: "no-store",
     });
     if (!req?.ok) throw new Error("INTERNAL SERVER ERROR");
 
@@ -35,7 +35,7 @@ const getUsers = async () => {
   try {
     const req = await fetch("/api/account", {
       method: "GET",
-      cache: "force-cache",
+      cache: "no-store",
     });
     if (!req?.ok) throw new Error("INTERNAL SERVER ERROR");
     return await req.json();
