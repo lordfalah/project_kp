@@ -81,7 +81,7 @@ export const columnsDashboard = [
     cell: ({ row }) => {
       const { toast } = useToast();
       const queryClient = useQueryClient();
-      const { mutate } = useMutation({
+      const { mutateAsync: deleteMutate } = useMutation({
         mutationFn: clientApi.deleteOrder,
         onMutate: async (id) => {
           await queryClient.cancelQueries({ queryKey: ["orders"] });
@@ -100,6 +100,7 @@ export const columnsDashboard = [
         // Always refetch after error or success:
         onSettled: () => {
           queryClient.invalidateQueries({ queryKey: ["orders"] });
+          queryClient.invalidateQueries({ queryKey: ["historys"] });
         },
       });
 
@@ -143,7 +144,7 @@ export const columnsDashboard = [
             type="button"
             onClick={async () => {
               try {
-                mutate(row?.original?.order?.id);
+                await deleteMutate(row?.original?.order?.id);
                 toast({
                   variant: "success",
                   title: "Success",

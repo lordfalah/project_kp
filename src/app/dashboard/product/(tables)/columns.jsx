@@ -2,7 +2,6 @@
 
 import Edit from "@/assets/icon/Edit";
 import Trash from "@/assets/icon/Trash";
-import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
 import FormEdit from "./formEdit";
@@ -15,6 +14,8 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { clientApi } from "@/libs/server/action";
+import { useEdgeStore } from "@/libs/edgestore";
+import { formatRupiah, sortText } from "@/utils/format";
 
 export const columnsProducts = [
   {
@@ -41,10 +42,16 @@ export const columnsProducts = [
   {
     accessorKey: "description",
     header: "Description",
+    cell: ({ row }) => {
+      return <span>{sortText(row.getValue("description"), 50)}</span>;
+    },
   },
   {
     accessorKey: "price",
     header: "Price",
+    cell: ({ row }) => {
+      return <span>Rp. {formatRupiah(row.getValue("price"))}</span>;
+    },
   },
   {
     accessorKey: "createdAt",
@@ -64,7 +71,7 @@ export const columnsProducts = [
       const queryClient = useQueryClient();
       const { edgestore } = useEdgeStore();
 
-      const mutation = useMutation({
+      const { mutate: deleteMutate } = useMutation({
         mutationFn: clientApi.deleteProduct,
         onMutate: async (id) => {
           await queryClient.cancelQueries({ queryKey: ["products"] });
@@ -83,6 +90,8 @@ export const columnsProducts = [
         },
       });
 
+      console.log(row?.original);
+
       return (
         <div className="flex gap-x-4">
           <Dialog>
@@ -100,7 +109,7 @@ export const columnsProducts = [
             type="button"
             onClick={async () => {
               try {
-                mutation.mutate(row?.original?.id);
+                deleteMutate(row?.original?.id);
                 await edgestore.publicFiles.delete({
                   url: row?.original?.imageUrls[0]?.url,
                 });

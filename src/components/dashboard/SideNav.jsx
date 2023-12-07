@@ -8,13 +8,14 @@ import Table from "@/assets/icon/Table";
 import Link from "next/link";
 import React, { useContext, useEffect, useRef } from "react";
 import { OpenNav } from "@/utils/hooks/useOpenNav";
+import Dashboard from "@/assets/icon/Dashboard";
 
 export const nav_link = {
   route_dash: [
     {
       name: "Dashboard",
       path: "/dashboard",
-      icon: <Monitor className="w-5 h-5 stroke-blue-500/90" />,
+      icon: <Dashboard className="w-5 h-5 stroke-blue-500/90" />,
     },
 
     {

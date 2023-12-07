@@ -1,11 +1,12 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { EdgeStoreProvider } from "@/libs/edgestore";
+
 import Providers from "@/utils/query/Providers";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import NextAuthProvider from "@/utils/context/NextAuthProvider";
 import { CartOrderContext } from "@/utils/context/CartContex";
 import { Toaster } from "@/components/ui/toaster";
+import { EdgeStoreProvider } from "@/libs/edgestore";
 
 const inter = Inter({ subsets: ["latin"] });
 

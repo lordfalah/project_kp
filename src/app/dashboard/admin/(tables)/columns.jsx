@@ -1,7 +1,6 @@
 "use client";
 
 import Trash from "@/assets/icon/Trash";
-import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import {

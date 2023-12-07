@@ -16,6 +16,10 @@ export async function GET(req, { params }) {
     where: {
       id: params.id,
     },
+
+    include: {
+      category: true,
+    },
   });
 
   if (!product) {
@@ -25,8 +29,12 @@ export async function GET(req, { params }) {
   return NextResponse.json(product, { status: 200 });
 }
 
+const categorys = ["makanan", "minuman"];
+
 export async function PUT(req, { params }) {
   const { title, description, price, files, slug } = await req.json();
+  if (!categorys.includes(slug.toLowerCase()))
+    return NextResponse.json(null, { status: 400 });
 
   const product = await prisma.products.update({
     where: {
@@ -38,10 +46,22 @@ export async function PUT(req, { params }) {
       price: parseFloat(price),
       imageUrls: [{ url: files.url, size: files.size }],
       category: {
-        connect: {
-          slug,
+        connectOrCreate: {
+          create: {
+            slug,
+            description:
+              slug === "makanan" ? "Makanan enak poel" : "Minuman enak poll",
+          },
+
+          where: {
+            slug,
+          },
         },
       },
+    },
+
+    include: {
+      category: true,
     },
   });
 

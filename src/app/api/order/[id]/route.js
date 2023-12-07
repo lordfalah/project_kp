@@ -48,16 +48,46 @@ export async function DELETE(req, { params }) {
       );
 
     if (token.role === "SUPER ADMIN" || token.role === "ADMIN") {
-      const order = await prisma.order.delete({
-        where: {
-          id: params.id,
-        },
-      });
+      return prisma.$transaction(async (tx) => {
+        const order = await tx.order.delete({
+          where: {
+            id: params.id,
+          },
+          include: {
+            user: true,
+          },
+        });
 
-      return NextResponse.json(order, { status: 200 });
+        if (!order)
+          return NextResponse.json(
+            { message: "Gagal hapus order" },
+            { status: 404 }
+          );
+
+        const history = await tx.history.create({
+          data: {
+            createdAt: order.createdAt,
+            price: order.price,
+            products: order.products,
+            status: order.status,
+            name: order.user.name,
+            email: order.user.email,
+            image: order.user.image,
+          },
+        });
+
+        if (!history)
+          return NextResponse.json(
+            { message: "Gagal buat history" },
+            { status: 500 }
+          );
+
+        return NextResponse.json(order, { status: 200 });
+      });
     }
     return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
   } catch (error) {
+    console.log(error.message);
     return NextResponse.json(
       { message: "INTERNAL SERVER ERROR :(" },
       { status: 500 }

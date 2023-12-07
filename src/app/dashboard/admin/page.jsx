@@ -1,8 +1,8 @@
-import prisma from "@/libs/prisma";
 import getQueryClient from "@/utils/query/getQueryClient";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 import DataTableAdmin from "./(tables)/data-table";
+import prisma from "@/libs/prisma";
 
 export const fetchCache = "auto";
 export const getUsers = async () => {

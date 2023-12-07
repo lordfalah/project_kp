@@ -11,7 +11,15 @@ export default withAuth(
       if (token?.role === "USER")
         return NextResponse.redirect(new URL("/", req.url));
 
-      NextResponse.next();
+      return NextResponse.next();
+    }
+
+    // acces dashboard/history just SUPER ADMIN
+    if (req?.nextUrl?.pathname.startsWith("/dashboard/history")) {
+      if (token?.role === "USER" || token?.role === "ADMIN")
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+
+      return NextResponse.next();
     }
 
     // access /dashboard/product just role SUPER ADMIN
@@ -19,7 +27,7 @@ export default withAuth(
       if (token?.role === "ADMIN" || token?.role === "USER") {
         return NextResponse.redirect(new URL("/dashboard", req.url));
       }
-      NextResponse.next();
+      return NextResponse.next();
     }
 
     // must login to access cart
@@ -36,12 +44,12 @@ export default withAuth(
         return NextResponse.redirect(new URL("/", req.url));
       }
 
-      NextResponse.next();
+      return NextResponse.next();
     }
   },
   {
     callbacks: {
-      authorized: async ({ token, req }) => !!token,
+      authorized: async ({ token }) => !!token,
     },
   }
 );

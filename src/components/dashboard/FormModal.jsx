@@ -5,6 +5,15 @@ import { Input } from "../ui/input";
 import { SingleImageDropzone } from "../uploads/SingleImageDropzone";
 import { OpenNav } from "@/utils/hooks/useOpenNav";
 import { DialogClose, DialogFooter } from "../ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function checkObjectValidity(obj) {
   return Boolean(
@@ -19,6 +28,7 @@ const FormModal = ({
   onChanges,
   submitForm,
   form,
+  setForm,
   file,
   onChangeFile,
 }) => {
@@ -28,7 +38,7 @@ const FormModal = ({
     <form onSubmit={submitForm} method={method}>
       <div>
         <div className="flex flex-col items-center gap-y-4">
-          <h4 className="text-black text-3xl !place-self-start">{title}</h4>
+          {/* <h4 className="text-black text-3xl !place-self-start">{title}</h4> */}
           <SingleImageDropzone
             width={200}
             height={200}
@@ -63,19 +73,42 @@ const FormModal = ({
               placeholder="Title"
             />
           </label>
+          <div className="flex items-center justify-between gap-x-4 sm:gap-x-0">
+            <label htmlFor="price">
+              <span className="text-lg font-medium text-black">Price</span>
+              <Input
+                required
+                type="number"
+                onChange={onChanges}
+                value={form.price}
+                name="price"
+                id="price"
+                placeholder="Price"
+              />
+            </label>
 
-          <label htmlFor="price">
-            <span className="text-lg font-medium text-black">Price</span>
-            <Input
-              required
-              type="number"
-              onChange={onChanges}
-              value={form.price}
-              name="price"
-              id="price"
-              placeholder="Price"
-            />
-          </label>
+            <label htmlFor="category">
+              <span id="category" className="text-lg font-medium text-black">
+                Category
+              </span>
+              <Select
+                value={form?.category}
+                onValueChange={(value) =>
+                  setForm((prev) => ({ ...prev, category: value }))
+                }
+              >
+                <SelectTrigger className="w-40 md:w-[180px]">
+                  <SelectValue placeholder="select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="makanan">Makanan</SelectItem>
+                    <SelectItem value="minuman">Minuman</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </label>
+          </div>
 
           <label htmlFor="description">
             <span className="text-lg font-medium text-black">Description</span>

@@ -7,6 +7,10 @@ const formatRupiah = (money) => {
     .toString();
 };
 
+export function sortText(text, maxLength) {
+  return text.length > maxLength ? text.slice(0, maxLength - 3) + "..." : text;
+}
+
 const customSlickSett = (desktop, xl, lg, md, sm, xs) => {
   const settings = {
     ...desktop,

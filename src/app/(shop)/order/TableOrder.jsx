@@ -32,7 +32,7 @@ const TableOrder = ({ id }) => {
   });
 
   return (
-    <Container className="mx-auto xl:!max-w-7xl px-4 sm:px-0">
+    <Container className="xl:!max-w-7xl px-4">
       <h4 className="font-sans font-normal text-[26px] md:text-[22px] lg:text-[26px] mb-0 md:mb-6">
         Order Status
       </h4>

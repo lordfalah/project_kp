@@ -41,8 +41,13 @@ model Order {
 
 model History {
   id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  price     Float
   products  Json[]
+  status    String
+  name      String
+  email     String
+  image     String
+  createdAt DateTime @default(now())
 }
 
 model User {
@@ -53,9 +58,8 @@ model User {
   image         String?
   role          String?   @default("USER")
   order         Order?
-
-  accounts Account[]
-  sessions Session[]
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model Account {

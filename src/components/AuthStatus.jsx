@@ -2,7 +2,6 @@
 
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { Fragment } from "react";
 import Link from "next/link";
 
 import { LogOut } from "lucide-react";
@@ -17,7 +16,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Monitor from "@/assets/icon/Monitor";
+import Dashboard from "@/assets/icon/Dashboard";
 
 const AuthStatus = () => {
   const { data: session } = useSession();
@@ -41,14 +40,21 @@ const AuthStatus = () => {
             <DropdownMenuLabel>{session?.user?.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              {role === "ADMIN" ||
-                (role === "SUPER ADMIN" && (
-                  <DropdownMenuItem>
-                    <Monitor className="mr-2 h-4 w-4" />
-                    <Link href={"/dashboard"}>Dashboard</Link>
-                    <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                ))}
+              {role === "SUPER ADMIN" && (
+                <DropdownMenuItem>
+                  <Dashboard className="mr-2 h-4 w-4" />
+                  <Link href={"/dashboard"}>Dashboard</Link>
+                  <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              )}
+
+              {role === "ADMIN" && (
+                <DropdownMenuItem>
+                  <Dashboard className="mr-2 h-4 w-4" />
+                  <Link href={"/dashboard"}>Dashboard</Link>
+                  <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
 
             <DropdownMenuItem

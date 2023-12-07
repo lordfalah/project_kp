@@ -13,6 +13,7 @@ const FormEdit = ({ data }) => {
     title: data?.title || "",
     description: data?.description || "",
     price: data?.price || "",
+    category: data?.category?.slug || "",
   });
 
   const [file, setFile] = useState(data?.imageUrls[0]?.url || null);
@@ -38,7 +39,7 @@ const FormEdit = ({ data }) => {
 
   const submitForm = async (e) => {
     e.preventDefault();
-    const { title, description, price } = form;
+    const { title, description, price, category } = form;
 
     try {
       if (title && description && price) {
@@ -72,6 +73,7 @@ const FormEdit = ({ data }) => {
             title,
             description,
             price,
+            slug: category,
             files: {
               ...(newFile
                 ? { ...newFile }
@@ -80,7 +82,6 @@ const FormEdit = ({ data }) => {
                     size: data?.imageUrls[0]?.size,
                   }),
             },
-            slug: data?.catSlug,
           }),
         });
 
@@ -143,6 +144,7 @@ const FormEdit = ({ data }) => {
       onChanges={onChanges}
       submitForm={mutate}
       form={form}
+      setForm={setForm}
       file={file}
       setFile={setFile}
       onChangeFile={onChangeFile}

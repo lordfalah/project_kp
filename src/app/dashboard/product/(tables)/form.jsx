@@ -12,6 +12,7 @@ const form = () => {
     title: "",
     description: "",
     price: "",
+    category: "",
   });
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -52,10 +53,10 @@ const form = () => {
     e.preventDefault();
 
     try {
-      const { title, description, price } = form;
+      const { title, description, price, category } = form;
       const { url, size } = temp;
 
-      if (title && description && price && file) {
+      if (title && description && price && file && category) {
         // file save to edgestore
         await edgestore.publicFiles.confirmUpload({
           url,
@@ -66,6 +67,7 @@ const form = () => {
         const req = await fetch("/api/products/", {
           method: "POST",
           body: JSON.stringify({
+            category,
             title,
             description,
             price,
@@ -146,6 +148,7 @@ const form = () => {
       onChanges={onChanges}
       submitForm={mutate}
       form={form}
+      setForm={setForm}
       file={file}
       setFile={setFile}
       onChangeFile={onChangeFile}

@@ -4,7 +4,7 @@ import TableShop from "./TableShop";
 import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/libs/prisma";
 import { redirect } from "next/navigation";
-export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const itemsLink = [
   { name: "Home", path: "/" },

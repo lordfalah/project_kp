@@ -38,6 +38,7 @@ const TableShop = () => {
 
       const res = await req.json();
       toast({
+        variant: "success",
         title: "Success",
         description: "Checkout berhasil di tambah",
         action: (
@@ -58,7 +59,7 @@ const TableShop = () => {
   };
 
   return (
-    <Container className="mx-auto xl:!max-w-7xl px-4 sm:px-0">
+    <Container className="px-4 xl:!max-w-7xl">
       <h4 className="font-sans font-normal text-[26px] md:text-[22px] lg:text-[26px] mb-0 md:mb-6">
         Shopping Cart
       </h4>

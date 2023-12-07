@@ -1,9 +1,13 @@
 import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 
+const categorys = ["makanan", "minuman"];
+
 export async function POST(req, res) {
   try {
-    const { title, description, price, files } = await req.json();
+    const { title, description, price, files, category } = await req.json();
+    if (!categorys.includes(category.toLowerCase()))
+      return NextResponse.json(null, { status: 400 });
 
     const products = await prisma.products.create({
       data: {
@@ -14,12 +18,15 @@ export async function POST(req, res) {
         category: {
           connectOrCreate: {
             create: {
-              slug: "teh",
-              description: "minuman teh seger",
+              slug: category,
+              description:
+                category === "makanan"
+                  ? "Makanan enak poel"
+                  : "Minuman enak poll",
             },
 
             where: {
-              slug: "teh",
+              slug: category,
             },
           },
         },
@@ -36,6 +43,10 @@ export async function POST(req, res) {
 }
 
 export async function GET(req) {
-  const product = await prisma.products.findMany();
+  const product = await prisma.products.findMany({
+    include: {
+      category: true,
+    },
+  });
   return NextResponse.json(product, { status: 200 });
 }

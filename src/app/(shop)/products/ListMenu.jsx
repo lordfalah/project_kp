@@ -20,9 +20,9 @@ const ListMenu = ({ products, children }) => {
             <Link
               key={`${data.id}-${key}`}
               href={`products/${data?.id}`}
-              className={`card relative z-30 group shadow-sm`}
+              className={`card relative z-30 group`}
             >
-              <div className="w-[280px] h-[386px] relative rounded-xl overflow-hidden group-hover:shadow-lg transition duration-200 ease-in-out">
+              <div className="w-[280px] h-[386px] relative rounded-xl overflow-hidden group-hover:shadow-lg transition duration-200 ease-in-out shadow-lg">
                 <Image
                   src={data.imageUrls[0].url}
                   fill

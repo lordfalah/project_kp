@@ -6,7 +6,11 @@ import DataTableProducts from "./(tables)/data-table";
 export const fetchCache = "auto";
 export const getProducts = async () => {
   try {
-    const response = await prisma.products.findMany();
+    const response = await prisma.products.findMany({
+      include: {
+        category: true,
+      },
+    });
     return response ? response : [];
   } catch (error) {
     throw new Error(error);

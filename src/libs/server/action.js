@@ -25,7 +25,6 @@ const getOrders = async () => {
     if (!req?.ok) throw new Error("INTERNAL SERVER ERROR");
 
     const response = await req.json();
-    console.log(response);
     return response;
   } catch (error) {
     throw new Error(error?.message || "");
@@ -121,6 +120,34 @@ const onUpdateRole = async ({ role, id }) => {
   }
 };
 
+const getHistorys = async () => {
+  try {
+    const req = await fetch("/api/history", {
+      method: "GET",
+      cache: "no-store",
+    });
+    if (!req?.ok) throw new Error("INTERNAL SERVER ERROR");
+
+    const res = await req.json();
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error?.message || "");
+  }
+};
+
+const deleteHistory = async (id) => {
+  try {
+    const req = await fetch(`/api/history/${id}`, { method: "DELETE" });
+    if (!req.ok) throw new Error(req?.statusText || "");
+    const res = await req.json();
+
+    return res;
+  } catch (error) {
+    throw new Error(error?.message || "");
+  }
+};
+
 export const clientApi = {
   getProducts,
   getOrders,
@@ -130,4 +157,6 @@ export const clientApi = {
   onUpdateStatus,
   deleteUser,
   onUpdateRole,
+  getHistorys,
+  deleteHistory,
 };
