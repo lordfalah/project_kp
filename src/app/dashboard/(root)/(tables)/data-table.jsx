@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/select";
 
 import { Fragment, useState } from "react";
-import Search from "@/assets/icon/Search";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import ChevronLeftDouble from "@/assets/icon/ChevronLeftDouble";
@@ -64,7 +63,7 @@ function DataTableDashboard() {
   return (
     <Fragment>
       <div className="bg-white p-4 sm:p-6 grid grid-cols-6 gap-x-4 flex-wrap rounded-lg">
-        <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease col-span-4">
+        <div className="relative flex w-full transition-all rounded-lg ease col-span-4">
           <Input
             type="text"
             placeholder="Type here..."
@@ -74,6 +73,9 @@ function DataTableDashboard() {
             }
           />
         </div>
+        <h4 className="col-span-2 justify-self-end my-auto text-lg font-medium">
+          User Order
+        </h4>
       </div>
       <div className="rounded-md border bg-white my-6">
         <Table className="w-[700px] sm:w-full">
@@ -118,7 +120,7 @@ function DataTableDashboard() {
                   colSpan={columnsDashboard.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Tidak ada yang order
                 </TableCell>
               </TableRow>
             )}

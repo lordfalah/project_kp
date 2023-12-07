@@ -86,6 +86,7 @@ const FormEdit = ({ data }) => {
 
         const response = await req.json();
         toast({
+          variant: "success",
           title: "Success",
           description: "Data Product berhasil di edit",
         });

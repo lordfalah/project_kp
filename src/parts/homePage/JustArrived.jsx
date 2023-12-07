@@ -1,101 +1,28 @@
 "use client";
 
-import React, { Fragment, Suspense } from "react";
-
+import React from "react";
 import Eye from "@/assets/icon/Eye";
-import { customSlickSett, formatRupiah } from "@/utils/format";
+import { formatRupiah } from "@/utils/format";
 import Container from "@/components/Container";
-import useLongPress from "@/utils/hooks/useLongPress";
 import Link from "next/link";
 import Image from "next/image";
 
-const settings = customSlickSett(
-  {
-    slidesToShow: 4.2,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  },
-  {
-    slidesToShow: 3.4,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  },
-  {
-    slidesToShow: 2.5,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  },
-
-  {
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  },
-
-  {
-    slidesToShow: 1.6,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  },
-
-  {
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    pauseOnHover: true,
-  }
-);
-
-const Loadings = () => {
-  return (
-    <p className="text-5xl text-black font-bold">Loading package location...</p>
-  );
-};
-
 const JustArrived = ({ products }) => {
-  // const navigation = useNavigation();
-  // const navigate = useNavigate("");
-
-  const onLongPress = () => {
-    return null;
-  };
-
-  const onClick = (id) => id;
-
-  const defaultOptions = {
-    shouldPreventDefault: true,
-    delay: 120,
-  };
-  const longPressEvent = (id) => {
-    return useLongPress(onLongPress, () => onClick(id), defaultOptions);
-  };
   return (
     <section className="pt-16" id="just-arrived">
       <Container className="mb-4">
         <div className="text-center capitalize text-2xl font-semibold">
-          <h3>Just Arrived</h3>
-          <h3>This Summer For You</h3>
+          <h3>Menu</h3>
+          <h3>Makanan & Minuman</h3>
         </div>
       </Container>
 
-      <div className="flex overflow-x-scroll">
+      <div className="flex overflow-x-auto gap-x-8">
         {products.map((data, key) => (
           <Link
-            // {...longPressEvent(data.id)}
             key={`${data.id}-${key}`}
             href={`products/${data?.id}`}
-            className={`card relative z-30 px-4 group hover:cursor-grab focus:cursor-grabbing`}
+            className={`card relative z-30 px-4 group`}
           >
             <div className="w-[280px] h-[386px] relative rounded-xl overflow-hidden group-hover:shadow-lg transition duration-200 ease-in-out mx-auto">
               <Image

@@ -1,22 +1,14 @@
 "use client";
 
-import Edit from "@/assets/icon/Edit";
 import Trash from "@/assets/icon/Trash";
 import { useEdgeStore } from "@/libs/edgestore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
-import FormEdit from "./formEdit";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { clientApi } from "@/libs/server/action";
 
-export const columnsProducts = [
+export const columnsHistory = [
   {
     header: "No",
     cell: ({ row }) => <span className="font-medium">{row?.index + 1}</span>,
@@ -85,17 +77,6 @@ export const columnsProducts = [
 
       return (
         <div className="flex gap-x-4">
-          <Dialog>
-            <DialogTrigger>
-              <Edit />
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <FormEdit data={row?.original} />
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-
           <button
             type="button"
             onClick={async () => {

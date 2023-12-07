@@ -37,13 +37,11 @@ const form = () => {
         },
         onProgressChange: (progress) => {
           // you can use this to show a progress bar
-          console.log(progress);
           setProgress(progress);
         },
       });
       setTemp({ url: res?.url, size: res?.size });
     } catch (error) {
-      console.log({ error });
       setTemp({ url: "", size: 0 });
       setFile(null);
     }
@@ -82,6 +80,7 @@ const form = () => {
           throw new Error("Network response was not ok");
         }
         toast({
+          variant: "success",
           title: "Success",
           description: "Data Product berhasil di tambah",
         });

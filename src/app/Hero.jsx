@@ -25,7 +25,7 @@ const Hero = () => {
               inView ? "opacity-100 translate-y-0" : "translate-y-56 opacity-0"
             }`}
           >
-            The Room <br className="" />
+            Kedai Niaga <br className="" />
             You've Dreaming
           </h1>
           <h2
@@ -33,9 +33,9 @@ const Hero = () => {
               inView ? "opacity-100 translate-x-0" : "translate-x-64 opacity-0"
             }`}
           >
-            Kami menyediakan furniture berkelas yang
+            Kami menyediakan makanan dan minuman yang
             <br className="hidden lg:block" />
-            membuat ruangan terasa homey
+            membuat anda terasa homey
           </h2>
 
           <div
@@ -63,13 +63,13 @@ const Hero = () => {
 
             <div className="flex flex-col">
               <Image
-                src="/images/content/image-section-1.png"
-                className="absolute -z-20 inset-0 md:relative h-full md:w-full md:h-full"
+                src="/images/home/home.jpg"
+                className="absolute -z-20 inset-0 md:relative h-full md:w-full md:h-[70vh]"
                 alt="bg"
                 sizes="100vw"
                 style={{
                   width: "100%",
-                  height: "100%",
+                  // height: "100%",
                   objectFit: "cover",
                 }}
                 width={400}

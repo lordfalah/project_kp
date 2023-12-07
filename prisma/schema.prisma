@@ -39,6 +39,12 @@ model Order {
   userId    String   @unique
 }
 
+model History {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  products  Json[]
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -47,8 +53,9 @@ model User {
   image         String?
   role          String?   @default("USER")
   order         Order?
-  accounts      Account[]
-  sessions      Session[]
+
+  accounts Account[]
+  sessions Session[]
 }
 
 model Account {

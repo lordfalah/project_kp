@@ -6,11 +6,10 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { CartContext } from "@/utils/context/CartContex";
 import { formatRupiah } from "@/utils/format";
-
 import Image from "next/image";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
-const HeroProduct = ({ product }) => {
+const HeroProduct = ({ product, session }) => {
   const { state, dispatch } = useContext(CartContext);
   const { toast } = useToast();
 
@@ -19,6 +18,7 @@ const HeroProduct = ({ product }) => {
       dispatch({ type: "ADD_PRODUCT", payload: product });
 
       toast({
+        variant: "success",
         title: "Success",
         description: "Product berhasil di tambah",
       });
@@ -43,15 +43,17 @@ const HeroProduct = ({ product }) => {
               <h4 className="text-xl font-normal">
                 Rp {formatRupiah(product.price)}
               </h4>
-              <button
-                onClick={() => onAddProduct(product)}
-                type="button"
-                className="rounded-full bg-pink-100 flex justify-center 
+              {session?.token?.role === "USER" && (
+                <button
+                  onClick={() => onAddProduct(product)}
+                  type="button"
+                  className="rounded-full bg-pink-100 flex justify-center 
                 items-center py-3 px-8 gap-x-4 transition duration-100 ease-linear hover:shadow-pick"
-              >
-                <ShoppingCart />
-                <span>Add to Cart</span>
-              </button>
+                >
+                  <ShoppingCart />
+                  <span>Add to Cart</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -81,15 +83,18 @@ const HeroProduct = ({ product }) => {
                 <h4 className="text-xl font-normal">
                   Rp {formatRupiah(product.price)}
                 </h4>
-                <button
-                  onClick={() => onAddProduct(product)}
-                  type="button"
-                  className="btn-cart rounded-full bg-pink-100 flex justify-center 
+
+                {session?.token?.role === "USER" && (
+                  <button
+                    onClick={() => onAddProduct(product)}
+                    type="button"
+                    className="btn-cart rounded-full bg-pink-100 flex justify-center 
                   items-center py-3 px-8 gap-x-4 transition duration-100 ease-linear hover:shadow-pick"
-                >
-                  <ShoppingCart />
-                  <span>Add to Cart</span>
-                </button>
+                  >
+                    <ShoppingCart />
+                    <span>Add to Cart</span>
+                  </button>
+                )}
               </div>
             </div>
 

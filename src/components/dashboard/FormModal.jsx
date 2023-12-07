@@ -92,8 +92,7 @@ const FormModal = ({
           </label>
         </div>
 
-        <hr className="mt-4" />
-        <div className="flex flex-row-reverse">
+        <div className="flex flex-row-reverse mt-3">
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <button
@@ -106,7 +105,7 @@ const FormModal = ({
                     : "cursor-pointer hover:opacity-90 transition-opacity"
                 }`}
               >
-                <span className="pl-2 mx-1">Save</span>
+                <span className="text-white">Save</span>
               </button>
             </DialogClose>
           </DialogFooter>

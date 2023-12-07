@@ -4,6 +4,7 @@ import HeroProduct from "./HeroProduct";
 import AboutProduct from "./AboutProduct";
 import prisma from "@/libs/prisma";
 import { redirect } from "next/navigation";
+import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 
 const getProduct = async (id) => {
   try {
@@ -19,8 +20,14 @@ const getProduct = async (id) => {
   }
 };
 
+export const metadata = {
+  title: "Detail Product",
+  description: "products",
+};
+
 const page = async ({ params }) => {
   const product = await getProduct(params?.id);
+  const token = await getAuthSession();
 
   if (!product) {
     return redirect("/");
@@ -28,14 +35,14 @@ const page = async ({ params }) => {
 
   const itemsLink = [
     { name: "Home", path: "/" },
-    { name: "Products", path: "" },
+    { name: "Products", path: "/products" },
     { name: "Details", path: "" },
   ];
 
   return (
     <main>
       <BreadCrumb itemsLink={itemsLink} className="px-4 sm:px-0 py-7 mt-20" />
-      <HeroProduct product={product} />
+      <HeroProduct product={product} session={token} />
       <AboutProduct />
     </main>
   );

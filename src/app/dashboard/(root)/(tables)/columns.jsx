@@ -12,36 +12,7 @@ import { formatRupiah } from "@/utils/format";
 import Trash from "@/assets/icon/Trash";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-
-const deleteOrder = async (id) => {
-  try {
-    const req = await fetch(`/api/order/${id}`, { method: "DELETE" });
-    if (!req.ok) throw new Error(req?.statusText || "");
-
-    const res = await req.json();
-    return res;
-  } catch (error) {
-    throw new Error(error?.message || "");
-  }
-};
-
-const onUpdateStatus = async ({ status, id }) => {
-  try {
-    const req = await fetch(`/api/order/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        status,
-      }),
-    });
-
-    if (!req.ok) throw new Error(req?.statusText || "");
-
-    const res = await req.json();
-    return res;
-  } catch (error) {
-    throw new Error(error?.message || "");
-  }
-};
+import { clientApi } from "@/libs/server/action";
 
 export const columnsDashboard = [
   {
@@ -58,13 +29,13 @@ export const columnsDashboard = [
           <Image
             width={150}
             height={150}
-            src={row?.original?.user?.image}
-            alt={row?.original?.user?.name}
+            src={row?.original?.image}
+            alt={row?.original?.name}
             className="w-8 h-8 aspect-square rounded-full"
             style={{ objectFit: "cover" }}
           />
 
-          <span>{row?.original?.user?.name}</span>
+          <span>{row?.original?.name}</span>
         </div>
       );
     },
@@ -80,12 +51,11 @@ export const columnsDashboard = [
   },
 
   {
-    accessorKey: "price",
     header: "Price",
     cell: ({ row }) => {
       return (
         <span className="font-medium">
-          Rp. {formatRupiah(row.getValue("price"))}
+          Rp. {formatRupiah(row?.original?.order?.price)}
         </span>
       );
     },
@@ -97,8 +67,7 @@ export const columnsDashboard = [
     cell: ({ row }) => {
       return (
         <span className="font-medium">
-          {row
-            ?.getValue("products")
+          {row?.original?.order?.products
             ?.map((product) => product.title)
             .join(" ")}
         </span>
@@ -113,7 +82,7 @@ export const columnsDashboard = [
       const { toast } = useToast();
       const queryClient = useQueryClient();
       const { mutate } = useMutation({
-        mutationFn: deleteOrder,
+        mutationFn: clientApi.deleteOrder,
         onMutate: async (id) => {
           await queryClient.cancelQueries({ queryKey: ["orders"] });
           const previousOrders = queryClient.getQueryData(["orders"]);
@@ -139,12 +108,12 @@ export const columnsDashboard = [
           <Select
             onValueChange={async (status) => {
               try {
-                await onUpdateStatus({
+                await clientApi.onUpdateStatus({
                   status,
-                  id: row?.original?.id,
-                  toast,
+                  id: row?.original?.order?.id,
                 });
                 toast({
+                  variant: "success",
                   title: "Success",
                   description: "Status Order berhasil di update",
                 });
@@ -162,7 +131,7 @@ export const columnsDashboard = [
             }}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={row?.getValue("status")} />
+              <SelectValue placeholder={row?.original?.order?.status} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="DONE">DONE</SelectItem>
@@ -174,8 +143,9 @@ export const columnsDashboard = [
             type="button"
             onClick={async () => {
               try {
-                mutate(row?.original?.id);
+                mutate(row?.original?.order?.id);
                 toast({
+                  variant: "success",
                   title: "Success",
                   description: "Data Order berhasil di hapus",
                 });

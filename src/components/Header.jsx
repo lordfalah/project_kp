@@ -4,10 +4,10 @@ import React, { Fragment, useState } from "react";
 import Container from "./Container";
 import Link from "next/link";
 import ShoppingCart from "@/assets/icon/ShoppingCart";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import AuthStatus from "./AuthStatus";
 
-const Header = ({ category = [] }) => {
+const Header = ({ category = [], position = "fixed" }) => {
   const inView = true;
   const { data: session } = useSession();
   const [toggle, setToggle] = useState(false);
@@ -17,19 +17,13 @@ const Header = ({ category = [] }) => {
 
   const navHeader = [
     {
-      title: "Showcase",
-      path: "/",
-      to: "#just-arrived",
-      access: ["GUEST", "USER", "ADMIN", "SUPER ADMIN"],
-    },
-    {
       title: "Catalog",
-      path: "/",
+      path: "/products",
       to: "html",
       access: ["GUEST", "USER", "ADMIN", "SUPER ADMIN"],
     },
     {
-      title: "Order",
+      title: "Status",
       path: "/order",
       to: "html",
       access: ["USER"],
@@ -72,7 +66,7 @@ const Header = ({ category = [] }) => {
         style={{
           borderStyle: `${!inView ? "inset" : "none"}`,
         }}
-        className={`fixed top-0 transition duration-200 ease-in-out w-full z-50 ${
+        className={`${position} top-0 transition duration-200 ease-in-out w-full z-50 ${
           !inView ? "bg-gradient-to-r from-white/60 to-black/30 shadow-md" : ""
         }`}
       >
@@ -249,7 +243,7 @@ const Header = ({ category = [] }) => {
                   )
                 )}
 
-                <li className="flex gap-x-3.5 items-center justify-center">
+                <li className="flex flex-col md:flex-row gap-y-3.5 md:gap-y-0 md:gap-x-3.5 items-center justify-center mx-auto">
                   <AuthStatus />
                 </li>
               </ul>

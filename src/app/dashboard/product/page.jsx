@@ -7,9 +7,9 @@ export const fetchCache = "auto";
 export const getProducts = async () => {
   try {
     const response = await prisma.products.findMany();
-    return response;
+    return response ? response : [];
   } catch (error) {
-    return error;
+    throw new Error(error);
   }
 };
 

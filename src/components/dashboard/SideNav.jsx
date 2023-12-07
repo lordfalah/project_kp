@@ -28,6 +28,12 @@ export const nav_link = {
       path: "/dashboard/product",
       icon: <Table className="w-5 h-5 stroke-orange-400/90" />,
     },
+
+    {
+      name: "Table History",
+      path: "/dashboard/history",
+      icon: <Table className="w-5 h-5 stroke-orange-400/90" />,
+    },
   ],
 
   route_auth: {
@@ -75,7 +81,7 @@ const SideNav = ({ className = "" }) => {
             <div className="flex items-center ">
               <Monitor className="w-8 h-8" />
               <span className="ml-1 font-semibold transition-all duration-200 ease-nav-brand">
-                Argon Dashboard 2
+                Kedai Niaga
               </span>
             </div>
           </div>
@@ -106,22 +112,6 @@ const SideNav = ({ className = "" }) => {
                 Account pages
               </h6>
             </li>
-
-            {nav_link.route_auth.route.map(({ name, path, icon }, idx) => (
-              <li key={`${idx}~${name}`} className="w-full">
-                <Link
-                  href={path}
-                  className="py-3.5 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
-                >
-                  <div className="mr-2 flex items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                    {icon}
-                  </div>
-                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    {name}
-                  </span>
-                </Link>
-              </li>
-            ))}
           </ul>
         </div>
       </div>

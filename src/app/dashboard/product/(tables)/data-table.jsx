@@ -48,10 +48,12 @@ function DataTableProducts() {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
 
-  const { data } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ["products"],
     queryFn: clientApi.getProducts,
   });
+
+  console.log(isError);
 
   const table = useReactTable({
     data,

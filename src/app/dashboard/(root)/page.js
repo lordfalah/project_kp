@@ -6,12 +6,13 @@ import DataTableDashboard from "./(tables)/data-table";
 export const fetchCache = "auto";
 export const getOrders = async () => {
   try {
-    const response = await prisma.order.findMany({
+    const response = await prisma.user.findMany({
       include: {
-        user: true,
+        order: true,
       },
     });
-    return response;
+
+    return response ? response.filter((data) => data.order !== null) : [];
   } catch (error) {
     return error;
   }
