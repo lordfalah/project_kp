@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
             <EdgeStoreProvider>
               <CartOrderContext>{children}</CartOrderContext>
             </EdgeStoreProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
           </Providers>
         </NextAuthProvider>
 

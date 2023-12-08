@@ -6,6 +6,13 @@ import prisma from "@/libs/prisma";
 import { redirect } from "next/navigation";
 import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 
+export const revalidate = 0;
+
+export const metadata = {
+  title: "Detail Product",
+  description: "products",
+};
+
 const getProduct = async (id) => {
   try {
     const response = await prisma.products.findFirst({
@@ -20,13 +27,23 @@ const getProduct = async (id) => {
   }
 };
 
-export const metadata = {
-  title: "Detail Product",
-  description: "products",
+const getProductByCategory = async (category) => {
+  try {
+    const response = await prisma.products.findMany({
+      where: {
+        catSlug: category,
+      },
+    });
+
+    return response ? response : [];
+  } catch (error) {
+    throw new Error(error.message || "");
+  }
 };
 
 const page = async ({ params }) => {
   const product = await getProduct(params?.id);
+  const productsCategory = await getProductByCategory(product.catSlug);
   const token = await getAuthSession();
 
   if (!product) {
@@ -43,7 +60,7 @@ const page = async ({ params }) => {
     <main>
       <BreadCrumb itemsLink={itemsLink} className="px-4 sm:px-0 py-7 mt-20" />
       <HeroProduct product={product} session={token} />
-      <AboutProduct />
+      <AboutProduct products={productsCategory} />
     </main>
   );
 };
