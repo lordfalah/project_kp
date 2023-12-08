@@ -62,7 +62,7 @@ const Login = () => {
               onClick={() =>
                 signIn("google", {
                   redirect: true,
-                  callbackUrl: "http://localhost:3000/",
+                  callbackUrl: process.env.NEXT_PUBLIC_URL_PAGE,
                 })
               }
             >
