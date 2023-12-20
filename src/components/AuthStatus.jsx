@@ -77,22 +77,3 @@ const AuthStatus = () => {
 };
 
 export default AuthStatus;
-{
-  /* <Link href={"/login"}>
-<span className="text-black">Sign In</span>
-</Link> */
-}
-{
-  /* <Fragment>
-<Image
-  src={session?.user?.image}
-  width={150}
-  height={150}
-  className="w-8 h-8 rounded-full"
-  alt={session?.user?.name}
-/>
-<button type="button" onClick={() => signOut()}>
-  <span className="text-black">Sign Out</span>
-</button>
-</Fragment> */
-}

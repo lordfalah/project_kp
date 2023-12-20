@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="my-12">
       <Container>
         <p className="text-sm text-center">
-          Copyright 2023 • All Rights Reserved LuxSpace by Falhalla
+          Copyright 2023 • All Rights Reserved by Irfin Falah
         </p>
       </Container>
     </footer>

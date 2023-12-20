@@ -17,6 +17,11 @@ export const getProducts = async () => {
   }
 };
 
+export const metadata = {
+  title: "Product",
+  description: "Table Product",
+};
+
 export default async function page() {
   // Inisialisasi QueryClient
   const queryClient = getQueryClient();

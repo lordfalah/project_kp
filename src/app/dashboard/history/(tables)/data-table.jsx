@@ -50,8 +50,6 @@ function DataTableHistorys() {
     queryFn: clientApi.getHistorys,
   });
 
-  console.log(data);
-
   const table = useReactTable({
     data,
     columns: columnsHistory,
@@ -122,12 +120,15 @@ function DataTableHistorys() {
             </div>
           </div>
           <Image
-            src={"/images/logo/Google.svg"}
+            src={"/images/logo/logo_coffe.png"}
             width={200}
             height={200}
+            className="w-16"
+            style={{
+              objectFit: "cover",
+            }}
+            alt="logo kedai"
             priority
-            className="w-16 h-16 aspect-square"
-            style={{ objectFit: "cover", backgroundBlendMode: "color-burn" }}
           />
         </div>
 

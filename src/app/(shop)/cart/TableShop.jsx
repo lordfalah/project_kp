@@ -9,14 +9,22 @@ import { formatRupiah } from "@/utils/format";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Fragment, useContext } from "react";
+import { useRouter } from "next/navigation";
 
 const TableShop = () => {
   const { state: cart, dispatch } = useContext(CartContext);
   const { toast } = useToast();
+  const router = useRouter();
 
-  const removeProduct = (id) => {
-    dispatch({ type: "REMOVE_PRODUCT", payload: id });
+  const removeProduct = (product) => {
+    // console.log(product);
+    dispatch({
+      type: "DELETE_PRODUCT",
+      payload: { ...product, quantity: product.quantity, price: product.price },
+    });
   };
+
+  console.log(cart);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +55,8 @@ const TableShop = () => {
           </ToastAction>
         ),
       });
+
+      router.refresh();
       return res;
     } catch (error) {
       toast({
@@ -118,7 +128,7 @@ const TableShop = () => {
                   </h5>
 
                   <button
-                    onClick={() => removeProduct(product.id)}
+                    onClick={() => removeProduct(product)}
                     type="button"
                     className="w-fit mx-auto col-span-1"
                   >

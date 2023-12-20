@@ -90,7 +90,6 @@ export const columnsProducts = [
         },
       });
 
-      console.log(row?.original);
 
       return (
         <div className="flex gap-x-4">

@@ -33,14 +33,17 @@ export async function GET(req) {
       return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
     }
 
-    const order = await prisma.user.findMany({
+    const res = await prisma.user.findMany({
       include: {
         order: true,
       },
-    });
-    const response = order ? order.filter((data) => data.order !== null) : [];
 
-    return NextResponse.json(response, { status: 200 });
+      where: {
+        order: { isNot: null },
+      },
+    });
+
+    return NextResponse.json(res, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
   }

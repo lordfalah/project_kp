@@ -1,11 +1,11 @@
 import "@/assets/css/App.css";
-import BrowseRoom from "@/parts/homePage/BrowseRoom";
-import JustArrived from "@/parts/homePage/JustArrived";
-import Clients from "@/parts/homePage/Clients";
 import Hero from "./Hero";
 import Layouts from "@/components/Layouts";
 import getQueryClient from "@/utils/query/getQueryClient";
 import { getProducts } from "./dashboard/product/page";
+import BrowseRoom from "@/parts/homePage/BrowseRoom";
+import JustArrived from "@/parts/homePage/JustArrived";
+import Clients from "@/parts/homePage/Clients";
 
 export default async function Home() {
   const queryClient = getQueryClient();

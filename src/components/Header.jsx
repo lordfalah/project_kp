@@ -1,17 +1,20 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import Container from "./Container";
 import Link from "next/link";
 import ShoppingCart from "@/assets/icon/ShoppingCart";
 import { useSession } from "next-auth/react";
 import AuthStatus from "./AuthStatus";
+import Image from "next/image";
+import { CartContext } from "@/utils/context/CartContex";
 
 const Header = ({ category = [], position = "fixed" }) => {
   const inView = true;
   const { data: session } = useSession();
   const [toggle, setToggle] = useState(false);
   const myRoute = "/";
+  const { state: cart } = useContext(CartContext);
 
   const role = session?.token?.role;
 
@@ -30,11 +33,7 @@ const Header = ({ category = [], position = "fixed" }) => {
     },
 
     {
-      title: (
-        <ShoppingCart
-          className={`icon-cart ${category.length > 0 ? "animate-shake" : ""}`}
-        />
-      ),
+      title: <ShoppingCart key={cart.to} className={`icon-cart`} />,
 
       path: "/cart",
       to: "html",
@@ -77,9 +76,16 @@ const Header = ({ category = [], position = "fixed" }) => {
               className="cursor-pointer"
               onClick={() => handleScrollToTop("html")}
             >
-              <img
-                className="w-full md:w-4/5 lg:w-full"
-                src="/images/content/logo.png"
+              <Image
+                src={"/images/logo/logo_coffe.png"}
+                width={200}
+                height={200}
+                className="w-16"
+                style={{
+                  objectFit: "cover",
+                }}
+                alt="logo kedai"
+                priority
               />
             </Link>
             <div className="flex gap-5 items-center md:hidden">
@@ -125,9 +131,7 @@ const Header = ({ category = [], position = "fixed" }) => {
 
               <Link href={"/cart"} className="relative block">
                 <ShoppingCart
-                  className={`icon-cart block origin-left md:hidden ${
-                    category.length > 0 ? "animate-shake" : ""
-                  }`}
+                  className={`icon-cart block origin-left md:hidden `}
                 />
                 <span
                   className={`absolute flex h-2 w-2 top-1 right-[2px] transition duration-150 ease-in-out ${
@@ -176,6 +180,12 @@ const Header = ({ category = [], position = "fixed" }) => {
                         href={path}
                         className={`relative block`}
                       >
+                        {path === "/cart" && cart.totalItems !== 0 && (
+                          <span className="absolute right-1/2 translate-x-1/2 -top-1.5 text-red-500 rounded-full text-base font-semibold z-20">
+                            {cart.totalItems}
+                          </span>
+                        )}
+
                         {idx === 4 ? (
                           <Fragment>
                             <span

@@ -5,15 +5,27 @@ import ListMenu from "./ListMenu";
 import FilterMenu from "./FilterMenu";
 
 export const revalidate = 0;
-export const getProducts = async (Qmenu) => {
+export const getProducts = async (Qmenu, Qcategory) => {
   let response;
   try {
-    if (Qmenu.trim() !== "") {
+    if (Qmenu.trim() !== "" || Qcategory.trim() !== "") {
       response = await prisma.products.findMany({
         where: {
-          title: {
-            startsWith: Qmenu,
-          },
+          AND: [
+            {
+              title: {
+                contains: Qmenu,
+                mode: "insensitive",
+              },
+            },
+
+            {
+              catSlug: {
+                contains: Qcategory,
+                mode: "insensitive",
+              },
+            },
+          ],
         },
       });
     } else {
@@ -33,8 +45,7 @@ const itemsLink = [
 const page = async ({ searchParams }) => {
   const menu = searchParams?.menu || "";
   const category = searchParams?.category || "";
-
-  const products = await getProducts(menu);
+  const products = await getProducts(menu, category);
 
   return (
     <main>

@@ -7,20 +7,47 @@ import { useToast } from "@/components/ui/use-toast";
 import { CartContext } from "@/utils/context/CartContex";
 import { formatRupiah } from "@/utils/format";
 import Image from "next/image";
-import React, { useContext } from "react";
+import { useContext, useState } from "react";
+import { Plus, Minus } from "lucide-react";
 
 const HeroProduct = ({ product, session }) => {
+  const [quantity, setQuantity] = useState(0);
   const { state, dispatch } = useContext(CartContext);
   const { toast } = useToast();
 
   const onAddProduct = async (product) => {
     try {
-      dispatch({ type: "ADD_PRODUCT", payload: product });
+      dispatch({ type: "ADD_PRODUCT", payload: { ...product, quantity } });
 
       toast({
         variant: "success",
         title: "Success",
         description: "Product berhasil di tambah",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error?.message || "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    }
+  };
+
+  const onRemoveProduct = (product) => {
+    try {
+      if (quantity <= 0) {
+        throw new Error("Products sudah 0");
+      }
+      dispatch({
+        type: "REMOVE_PRODUCT",
+        payload: { ...product, quantity, price: product.price },
+      });
+
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Product berhasil di kurang",
       });
     } catch (error) {
       toast({
@@ -85,7 +112,33 @@ const HeroProduct = ({ product, session }) => {
                 </h4>
 
                 {session?.token?.role === "USER" && (
-                  <button
+                  <div className="flex gap-5 items-center">
+                    <button
+                      onClick={() => {
+                        onAddProduct(product);
+                        setQuantity((prev) => prev + 1);
+                      }}
+                      type="button"
+                      className="rounded-full bg-pink-100 transition-colors hover:bg-pink-200 p-4"
+                    >
+                      <Plus />
+                    </button>
+                    <p className="font-medium text-lg">{quantity}</p>
+                    <button
+                      disabled={Boolean(quantity > 0 ? false : true)}
+                      onClick={() => {
+                        onRemoveProduct(product);
+                        setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
+                      }}
+                      type="button"
+                      className={`rounded-full bg-pink-100 transition-colors hover:bg-pink-200 p-4 ${
+                        quantity > 0 ? "" : "cursor-not-allowed"
+                      }`}
+                    >
+                      <Minus />
+                    </button>
+
+                    {/* <button
                     onClick={() => onAddProduct(product)}
                     type="button"
                     className="btn-cart rounded-full bg-pink-100 flex justify-center 
@@ -93,7 +146,8 @@ const HeroProduct = ({ product, session }) => {
                   >
                     <ShoppingCart />
                     <span>Add to Cart</span>
-                  </button>
+                  </button> */}
+                  </div>
                 )}
               </div>
             </div>

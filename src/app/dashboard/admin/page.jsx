@@ -26,6 +26,11 @@ export const getUsers = async () => {
   }
 };
 
+export const metadata = {
+  title: "Table Account",
+  description: "Table Account Admin",
+};
+
 export default async function page() {
   // Inisialisasi QueryClient
   const queryClient = getQueryClient();

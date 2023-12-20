@@ -3,8 +3,8 @@ import React from "react";
 import HeroProduct from "./HeroProduct";
 import AboutProduct from "./AboutProduct";
 import prisma from "@/libs/prisma";
-import { redirect } from "next/navigation";
 import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
+import { notFound } from "next/navigation";
 
 export const revalidate = 0;
 
@@ -21,9 +21,11 @@ const getProduct = async (id) => {
       },
     });
 
+    if (!response) return null;
+
     return response;
   } catch (error) {
-    return null;
+    throw new Error(error.message || "");
   }
 };
 
@@ -43,12 +45,11 @@ const getProductByCategory = async (category) => {
 
 const page = async ({ params }) => {
   const product = await getProduct(params?.id);
+  if (!product) {
+    notFound();
+  }
   const productsCategory = await getProductByCategory(product.catSlug);
   const token = await getAuthSession();
-
-  if (!product) {
-    return redirect("/");
-  }
 
   const itemsLink = [
     { name: "Home", path: "/" },

@@ -1,9 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Monitor from "@/assets/icon/Monitor";
-import SignIn from "@/assets/icon/SignIn";
-import SignUp from "@/assets/icon/SignUp";
+import Image from "next/image";
 import Table from "@/assets/icon/Table";
 import Link from "next/link";
 import React, { useContext, useEffect, useRef } from "react";
@@ -19,7 +17,7 @@ export const nav_link = {
     },
 
     {
-      name: "Table Admin",
+      name: "Table Account",
       path: "/dashboard/admin",
       icon: <Table className="w-5 h-5 stroke-orange-400/90" />,
     },
@@ -36,22 +34,6 @@ export const nav_link = {
       icon: <Table className="w-5 h-5 stroke-orange-400/90" />,
     },
   ],
-
-  route_auth: {
-    title: "ACCOUNT PAGES",
-    route: [
-      {
-        name: "Sign In",
-        path: "/signin",
-        icon: <SignIn />,
-      },
-      {
-        name: "Sign Up",
-        path: "/signup",
-        icon: <SignUp />,
-      },
-    ],
-  },
 };
 
 const SideNav = ({ className = "" }) => {
@@ -80,7 +62,17 @@ const SideNav = ({ className = "" }) => {
         <div>
           <div className="h-19 p-6">
             <div className="flex items-center ">
-              <Monitor className="w-8 h-8" />
+              <Image
+                src={"/images/logo/logo_coffe.png"}
+                width={200}
+                height={200}
+                className="w-12"
+                style={{
+                  objectFit: "cover",
+                }}
+                alt="logo kedai"
+                priority
+              />
               <span className="ml-1 font-semibold transition-all duration-200 ease-nav-brand">
                 Kedai Niaga
               </span>

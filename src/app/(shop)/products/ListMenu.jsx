@@ -30,6 +30,7 @@ const ListMenu = ({ products, children }) => {
                   className="w-full h-full bg-cover bg-no-repeat bg-center group-hover:scale-125 transition duration-300 ease-in-out"
                   style={{ objectFit: "cover" }}
                   alt={`image ${data?.title}`}
+                  priority
                 />
 
                 <div className="transition duration-200 ease-in-out absolute inset-0 opacity-0 group-hover:opacity-100 bg-black/[35%] w-full h-full flex justify-center items-center">

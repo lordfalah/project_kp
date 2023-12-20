@@ -8,8 +8,8 @@ const AboutProduct = ({ products }) => {
     <section className="bg-gray-100 my-20 py-16">
       <Container className="px-4 space-y-4">
         <div className="font-semibold text-2xl">
-          <h3>Complete Your Room</h3>
-          <h3>With What We Designed</h3>
+          <h3>Lihat Menu yang Mirip</h3>
+          <h3>Yang Kami Rancang Sedemikian Rupa</h3>
         </div>
 
         <div className="flex gap-4 overflow-x-scroll">

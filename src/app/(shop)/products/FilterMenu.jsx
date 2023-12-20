@@ -41,6 +41,8 @@ const FilterMenu = () => {
     replace(`${pathname}?${params.toString()}`);
   };
 
+  const category = searchParams.get("category");
+
   return (
     <Fragment>
       <h1 className="text-center text-3xl font-semibold">Daftar Menu</h1>
@@ -79,7 +81,10 @@ const FilterMenu = () => {
           </button>
         </div>
 
-        <Select className="" onValueChange={(e) => handleCategorySearch(e)}>
+        <Select
+          value={category || "reset"}
+          onValueChange={(e) => handleCategorySearch(e)}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
@@ -88,7 +93,7 @@ const FilterMenu = () => {
               <SelectLabel>Category</SelectLabel>
               <SelectItem value="makanan">Makanan</SelectItem>
               <SelectItem value="minuman">Minuman</SelectItem>
-              <SelectItem value="reset">Reset</SelectItem>
+              <SelectItem value="reset">All</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

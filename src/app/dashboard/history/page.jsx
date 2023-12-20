@@ -14,6 +14,11 @@ export const getHistorys = async () => {
   }
 };
 
+export const metadata = {
+  title: "History",
+  description: "Table History",
+};
+
 const page = async () => {
   // Inisialisasi QueryClient
   const queryClient = getQueryClient();

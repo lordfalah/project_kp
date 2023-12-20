@@ -6,6 +6,7 @@ import Container from "./Container";
 import ChevronDown from "@/assets/icon/ChevronDown";
 import Link from "next/link";
 import PaperAirplane from "@/assets/icon/PaperAirplane";
+import Image from "next/image";
 
 const SideMap = ({ children }) => {
   const [dropdown, setDropdown] = useState([
@@ -73,7 +74,17 @@ const SideMap = ({ children }) => {
       {children}
       <Container className="px-4 md:px-0">
         <div className="flex justify-center mb-8">
-          <img src="/images/content/logo.png" alt="LuxSpace" />
+          <Image
+            src={"/images/logo/logo_coffe.png"}
+            width={200}
+            height={200}
+            className="w-24"
+            style={{
+              objectFit: "cover",
+            }}
+            alt="logo kedai"
+            priority
+          />
         </div>
         <div className="flex flex-wrap md:justify-between lg:justify-around xl:justify-center gap-y-4 md:gap-y-0">
           {footTxt.map(({ id, title, subTitle }, idx) => (

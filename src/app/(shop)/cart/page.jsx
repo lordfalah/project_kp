@@ -29,12 +29,12 @@ const page = async () => {
   const session = await getAuthSession();
 
   if (session && !session?.token) {
-    return redirect("/");
+    redirect("/");
   }
 
   const myOrder = await getMyOrder(session?.token?.id);
   if (myOrder) {
-    return redirect("/order");
+    redirect("/order");
   }
 
   return (

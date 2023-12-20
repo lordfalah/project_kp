@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import SideMap from "@/components/SideMap";
 import React, { Fragment } from "react";
 
-const layoutCart = ({ children }) => {
+const ShopLayout = ({ children }) => {
   return (
     <Fragment>
       <Header />
@@ -15,4 +15,4 @@ const layoutCart = ({ children }) => {
   );
 };
 
-export default layoutCart;
+export default ShopLayout;

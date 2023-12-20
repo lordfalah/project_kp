@@ -10,12 +10,21 @@ export const getOrders = async () => {
       include: {
         order: true,
       },
+
+      where: {
+        order: { isNot: null },
+      },
     });
 
-    return response ? response.filter((data) => data.order !== null) : [];
+    return response;
   } catch (error) {
-    return error;
+    throw new Error(error.message || "");
   }
+};
+
+export const metadata = {
+  title: "Dashboard",
+  description: "Dashboard Admin",
 };
 
 export default async function page() {

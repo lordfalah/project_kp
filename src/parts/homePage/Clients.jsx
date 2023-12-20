@@ -1,5 +1,5 @@
 import Container from "@/components/Container";
-import React from "react";
+import Image from "next/image";
 
 const Clients = () => {
   const clientImg = [
@@ -14,10 +14,16 @@ const Clients = () => {
       <Container>
         <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-14">
           {clientImg.map((data, idx) => (
-            <img
+            <Image
               key={`${data.name}-${idx}`}
-              src={`images/content/${data.source}`}
+              src={`/images/clients/${data.source}`}
               alt={data.source}
+              width={150}
+              height={150}
+              style={{
+                width: "auto",
+                height: "auto",
+              }}
             />
           ))}
         </div>
