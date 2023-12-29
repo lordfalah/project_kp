@@ -5,7 +5,8 @@ import { getAuthSession } from "../auth/[...nextauth]/route";
 export async function GET(req) {
   try {
     const { token } = await getAuthSession();
-    if (!token) return NextResponse.json(null, { status: 404 });
+    if (!token)
+      return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
 
     const role = token?.role.toUpperCase();
     const response = await prisma.user.findMany({

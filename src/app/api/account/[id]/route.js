@@ -9,10 +9,7 @@ export async function PATCH(req, { params }) {
     const { token } = await getAuthSession();
 
     if (!token)
-      return NextResponse.json(
-        { message: "INTERNAL SERVER ERROR :(" },
-        { status: 500 }
-      );
+      return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
 
     if (token.role === "SUPER ADMIN") {
       const product = await prisma.user.update({
@@ -40,10 +37,7 @@ export async function DELETE(req, { params }) {
     const { token } = await getAuthSession();
 
     if (!token)
-      return NextResponse.json(
-        { message: "INTERNAL SERVER ERROR :(" },
-        { status: 500 }
-      );
+      return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
 
     if (token.role === "SUPER ADMIN") {
       const user = await prisma.user.delete({

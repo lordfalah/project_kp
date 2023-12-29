@@ -87,7 +87,6 @@ export async function DELETE(req, { params }) {
     }
     return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
   } catch (error) {
-    console.log(error.message);
     return NextResponse.json(
       { message: "INTERNAL SERVER ERROR :(" },
       { status: 500 }

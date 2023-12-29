@@ -22,7 +22,7 @@ export async function POST(req, res) {
 
     return NextResponse.json(response, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ message: error }, { status: 400 });
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 }
 

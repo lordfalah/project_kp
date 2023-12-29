@@ -2,7 +2,6 @@ import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 
 const categorys = ["makanan", "minuman"];
-
 export async function POST(req, res) {
   try {
     const { title, description, price, files, category } = await req.json();
@@ -43,10 +42,17 @@ export async function POST(req, res) {
 }
 
 export async function GET(req) {
-  const product = await prisma.products.findMany({
-    include: {
-      category: true,
-    },
-  });
-  return NextResponse.json(product, { status: 200 });
+  try {
+    const product = await prisma.products.findMany({
+      include: {
+        category: true,
+      },
+    });
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "INTERNAL SERVER ERROR :(" },
+      { status: 500 }
+    );
+  }
 }
