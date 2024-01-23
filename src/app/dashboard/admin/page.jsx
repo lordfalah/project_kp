@@ -8,6 +8,7 @@ export const fetchCache = "auto";
 export const getUsers = async () => {
   try {
     const { token } = await getAuthSession();
+
     const role = token?.role.toUpperCase();
     const response = await prisma.user.findMany({
       where: {
@@ -22,7 +23,7 @@ export const getUsers = async () => {
 
     return response ? response : [];
   } catch (error) {
-    return [];
+    throw new Error(error.message || "INTERNAL SERVER ERROR");
   }
 };
 

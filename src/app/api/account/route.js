@@ -4,11 +4,11 @@ import { getAuthSession } from "../auth/[...nextauth]/route";
 
 export async function GET(req) {
   try {
-    const { token } = await getAuthSession();
-    if (!token)
+    const session = await getAuthSession();
+    if (!session.token)
       return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
 
-    const role = token?.role.toUpperCase();
+    const role = session.token?.role.toUpperCase();
     const response = await prisma.user.findMany({
       where: {
         role:
@@ -20,8 +20,9 @@ export async function GET(req) {
       },
     });
 
-    return NextResponse.json(response, { status: 200 });
+    return NextResponse.json("response", { status: 200 });
   } catch (error) {
+    console.log({ err: error });
     return NextResponse.json(
       { message: "INTERNAL SERVER ERROR" },
       { status: 500 }

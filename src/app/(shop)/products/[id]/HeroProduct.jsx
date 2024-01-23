@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useContext, useState } from "react";
 import { Plus, Minus } from "lucide-react";
 
-const HeroProduct = ({ product, session }) => {
+const HeroProduct = ({ product, session, disable }) => {
   const [quantity, setQuantity] = useState(0);
   const { state, dispatch } = useContext(CartContext);
   const { toast } = useToast();
@@ -63,27 +63,6 @@ const HeroProduct = ({ product, session }) => {
     <section className="my-20">
       <Container className="px-4">
         <main className="flex justify-between flex-col lg:flex-row md:gap-x-4 xl:gap-x-0">
-          {/* mobile */}
-          <div className="block md:hidden">
-            <h1 className="text-5xl font-semibold">{product.title}</h1>
-            <div className="flex justify-between items-center my-3.5">
-              <h4 className="text-xl font-normal">
-                Rp {formatRupiah(product.price)}
-              </h4>
-              {session?.token?.role === "USER" && (
-                <button
-                  onClick={() => onAddProduct(product)}
-                  type="button"
-                  className="rounded-full bg-pink-100 flex justify-center 
-                items-center py-3 px-8 gap-x-4 transition duration-100 ease-linear hover:shadow-pick"
-                >
-                  <ShoppingCart />
-                  <span>Add to Cart</span>
-                </button>
-              )}
-            </div>
-          </div>
-
           <div
             className={`flex flex-col gap-y-5 md:flex-row-reverse md:gap-x-5 lg:gap-x-6 xl:gap-x-10`}
           >
@@ -103,15 +82,14 @@ const HeroProduct = ({ product, session }) => {
           </div>
 
           <article className="my-0 md:mb-8 md:mt-14 lg:my-0 w-full lg:w-1/2">
-            {/* desktop */}
-            <div className="space-y-1 hidden md:block">
+            <div className="space-y-1">
               <h1 className="text-5xl font-semibold">{product.title}</h1>
               <div className="flex justify-between items-center ">
                 <h4 className="text-xl font-normal">
                   Rp {formatRupiah(product.price)}
                 </h4>
 
-                {session?.token?.role === "USER" && (
+                {session?.token?.role === "USER" && disable === false && (
                   <div className="flex gap-5 items-center">
                     <button
                       onClick={() => {

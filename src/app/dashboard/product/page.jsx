@@ -13,7 +13,7 @@ export const getProducts = async () => {
     });
     return response ? response : [];
   } catch (error) {
-    throw new Error(error);
+    throw new Error("INTERNAL SERVER ERROR");
   }
 };
 

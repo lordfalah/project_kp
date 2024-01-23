@@ -15,17 +15,16 @@ export const metadata = {
 
 const getProduct = async (id) => {
   try {
-    const response = await prisma.products.findFirst({
-      where: {
-        id,
-      },
-    });
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_URL_PAGE}/api/products/${id}`,
+      { method: "GET", cache: "no-store" }
+    );
 
-    if (!response) return null;
-
-    return response;
+    const res = await req.json();
+    return res;
   } catch (error) {
-    throw new Error(error.message || "");
+    console.log(error);
+    throw new Error(error.message || "INTERNAL SERVER ERROR");
   }
 };
 
@@ -43,14 +42,35 @@ const getProductByCategory = async (category) => {
   }
 };
 
+const getOrderByUser = async (id) => {
+  try {
+    if (!id || id === undefined) return true;
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_URL_PAGE}/api/order/${id}`,
+      { cache: "no-store" }
+    );
+
+    if (!req.ok) {
+      throw new Error(req.statusText || "INTERNAL SERVER ERROR");
+    }
+
+    const res = await req.json();
+    return res ? true : false;
+  } catch (error) {
+    return false;
+  }
+};
+
 const page = async ({ params }) => {
   const product = await getProduct(params?.id);
+
   if (!product) {
     notFound();
   }
   const productsCategory = await getProductByCategory(product.catSlug);
-  const token = await getAuthSession();
+  const session = await getAuthSession();
 
+  const order = await getOrderByUser(session?.token.id);
   const itemsLink = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
@@ -60,7 +80,7 @@ const page = async ({ params }) => {
   return (
     <main>
       <BreadCrumb itemsLink={itemsLink} className="px-4 sm:px-0 py-7 mt-20" />
-      <HeroProduct product={product} session={token} />
+      <HeroProduct product={product} session={session} disable={order} />
       <AboutProduct products={productsCategory} />
     </main>
   );

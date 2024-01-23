@@ -1,24 +1,18 @@
 import getQueryClient from "@/utils/query/getQueryClient";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import DataTableDashboard from "./(tables)/data-table";
-import prisma from "@/libs/prisma";
 
-export const fetchCache = "auto";
 export const getOrders = async () => {
   try {
-    const response = await prisma.user.findMany({
-      include: {
-        order: true,
-      },
-
-      where: {
-        order: { isNot: null },
-      },
+    const req = await fetch(`${process.env.NEXT_PUBLIC_URL_PAGE}/api/order`, {
+      method: "GET",
+      cache: "no-store",
     });
 
-    return response;
+    const res = await req.json();
+    return res;
   } catch (error) {
-    throw new Error(error.message || "");
+    throw new Error(error.message || "INTERNAL SERVER ERROR");
   }
 };
 
