@@ -2,10 +2,11 @@ import "@/assets/css/App.css";
 import Hero from "./Hero";
 import Layouts from "@/components/Layouts";
 import getQueryClient from "@/utils/query/getQueryClient";
-
 import BrowseRoom from "@/parts/homePage/BrowseRoom";
 import JustArrived from "@/parts/homePage/JustArrived";
 import Clients from "@/parts/homePage/Clients";
+
+export const revalidate = 0;
 
 const getProducts = async () => {
   try {
@@ -15,9 +16,11 @@ const getProducts = async () => {
     );
 
     const res = await req.json();
+
     return res;
   } catch (error) {
-    throw new Error(error.message || "INTERNAL SERVER ERROR");
+    console.log(error.message);
+    throw new Error(error.message);
   }
 };
 

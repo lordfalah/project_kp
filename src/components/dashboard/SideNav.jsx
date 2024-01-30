@@ -61,7 +61,7 @@ const SideNav = ({ className = "" }) => {
       <div className="">
         <div>
           <div className="h-19 p-6">
-            <div className="flex items-center ">
+            <Link href={"/"} className="flex items-center cursor-pointer">
               <Image
                 src={"/images/logo/logo_coffe.png"}
                 width={200}
@@ -76,7 +76,7 @@ const SideNav = ({ className = "" }) => {
               <span className="ml-1 font-semibold transition-all duration-200 ease-nav-brand">
                 Kedai Niaga
               </span>
-            </div>
+            </Link>
           </div>
           <hr className="h-px mt-0 mb-5 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
         </div>
