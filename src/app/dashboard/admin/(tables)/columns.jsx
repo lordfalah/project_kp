@@ -16,6 +16,16 @@ import { Fragment } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { clientApi } from "@/libs/server/action";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const columnsAdmin = [
   {
@@ -107,7 +117,7 @@ export const columnsAdmin = [
       const { toast } = useToast();
       const queryClient = useQueryClient();
 
-      const { mutate: deleteMutate } = useMutation({
+      const { mutateAsync: deleteMutate } = useMutation({
         mutationFn: clientApi.deleteUser,
         onMutate: async (id) => {
           await queryClient.cancelQueries({ queryKey: ["users"] });
@@ -132,31 +142,57 @@ export const columnsAdmin = [
 
       return (
         <div className="flex gap-x-4">
-          <button
-            type="button"
-            onClick={() => {
-              try {
-                deleteMutate(row?.original?.id);
-                toast({
-                  variant: "success",
-                  title: "Success",
-                  description: "Tabel admin berhasil di hapus",
-                });
-              } catch (error) {
-                toast({
-                  variant: "destructive",
-                  title: "Uh oh! Something went wrong.",
-                  description:
-                    error?.message || "There was a problem with your request.",
-                  action: (
-                    <ToastAction altText="Try again">Try again</ToastAction>
-                  ),
-                });
-              }
-            }}
-          >
-            <Trash />
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button type="button">
+                <Trash />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>
+                  Are you sure want to delete this account?
+                </DialogTitle>
+                <DialogDescription>
+                  This will delete this account permanently. You cannot undo
+                  this action.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <button
+                    className="text-white bg-red-500 w-40 py-3 rounded-md font-semibold"
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await deleteMutate(row?.original?.id);
+                        toast({
+                          variant: "success",
+                          title: "Success",
+                          description: "Tabel admin berhasil di hapus",
+                        });
+                      } catch (error) {
+                        toast({
+                          variant: "destructive",
+                          title: "Uh oh! Something went wrong.",
+                          description:
+                            error?.message ||
+                            "There was a problem with your request.",
+                          action: (
+                            <ToastAction altText="Try again">
+                              Try again
+                            </ToastAction>
+                          ),
+                        });
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       );
     },

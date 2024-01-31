@@ -7,8 +7,12 @@ import { ArrowUpDown } from "lucide-react";
 import FormEdit from "./formEdit";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
@@ -90,7 +94,6 @@ export const columnsProducts = [
         },
       });
 
-
       return (
         <div className="flex gap-x-4">
           <Dialog>
@@ -104,35 +107,61 @@ export const columnsProducts = [
             </DialogContent>
           </Dialog>
 
-          <button
-            type="button"
-            onClick={async () => {
-              try {
-                deleteMutate(row?.original?.id);
-                await edgestore.publicFiles.delete({
-                  url: row?.original?.imageUrls[0]?.url,
-                });
+          <Dialog>
+            <DialogTrigger asChild>
+              <button type="button">
+                <Trash />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>
+                  Are you sure want to delete this product?
+                </DialogTitle>
+                <DialogDescription>
+                  This will delete this product permanently. You cannot undo
+                  this action.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <button
+                    className="text-white bg-red-500 w-40 py-3 rounded-md font-semibold"
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        deleteMutate(row?.original?.id);
+                        await edgestore.publicFiles.delete({
+                          url: row?.original?.imageUrls[0]?.url,
+                        });
 
-                toast({
-                  variant: "success",
-                  title: "Success",
-                  description: "Data Product berhasil di hapus",
-                });
-              } catch (error) {
-                toast({
-                  variant: "destructive",
-                  title: "Uh oh! Something went wrong.",
-                  description:
-                    error?.message || "There was a problem with your request.",
-                  action: (
-                    <ToastAction altText="Try again">Try again</ToastAction>
-                  ),
-                });
-              }
-            }}
-          >
-            <Trash />
-          </button>
+                        toast({
+                          variant: "success",
+                          title: "Success",
+                          description: "Data Product berhasil di hapus",
+                        });
+                      } catch (error) {
+                        toast({
+                          variant: "destructive",
+                          title: "Uh oh! Something went wrong.",
+                          description:
+                            error?.message ||
+                            "There was a problem with your request.",
+                          action: (
+                            <ToastAction altText="Try again">
+                              Try again
+                            </ToastAction>
+                          ),
+                        });
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       );
     },

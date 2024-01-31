@@ -10,8 +10,10 @@ export const getOrders = async () => {
     });
 
     const res = await req.json();
+
     return res;
   } catch (error) {
+    console.log(error.message);
     throw new Error(error.message || "INTERNAL SERVER ERROR");
   }
 };

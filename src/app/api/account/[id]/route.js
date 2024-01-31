@@ -40,6 +40,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
 
     if (token.role === "SUPER ADMIN") {
+      console.log(params.id);
       const user = await prisma.user.delete({
         where: {
           id: params.id,
@@ -50,6 +51,7 @@ export async function DELETE(req, { params }) {
     }
     return NextResponse.json({ message: "NOT AUTHORIZED" }, { status: 401 });
   } catch (error) {
+    console.log({ err: error.message });
     return NextResponse.json(
       { message: "INTERNAL SERVER ERROR :(" },
       { status: 500 }

@@ -8,6 +8,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { clientApi } from "@/libs/server/action";
 import { formatRupiah } from "@/utils/format";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const columnsHistory = [
   {
@@ -115,9 +125,39 @@ export const columnsHistory = [
 
       return (
         <div className="flex gap-x-4">
-          <button type="button" onClick={() => deleteMutate(row?.original?.id)}>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button type="button">
+                <Trash />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>
+                  Are you sure want to delete this history order?
+                </DialogTitle>
+                <DialogDescription>
+                  This will delete this history order permanently. You cannot
+                  undo this action.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <button
+                    className="text-white bg-red-500 w-40 py-3 rounded-md font-semibold"
+                    type="button"
+                    onClick={() => deleteMutate(row?.original?.id)}
+                  >
+                    Delete
+                  </button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* <button type="button" onClick={() => deleteMutate(row?.original?.id)}>
             <Trash />
-          </button>
+          </button> */}
         </div>
       );
     },
