@@ -54,7 +54,7 @@ export const columnsDashboard = [
     accessorKey: "createdAt",
     header: "Date",
     cell: ({ row }) => {
-      const date = new Date(row.getValue("createdAt"));
+      const date = new Date(row?.original?.order?.createdAt);
       const formatted = date.toLocaleDateString();
       return <div className="font-medium">{formatted}</div>;
     },

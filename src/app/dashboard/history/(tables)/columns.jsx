@@ -35,7 +35,7 @@ export const columnsHistory = [
   },
   {
     accessorKey: "image",
-    header: "Image",
+    header: "Profile",
     cell: ({ row }) => {
       return (
         <Image
@@ -56,11 +56,14 @@ export const columnsHistory = [
     cell: ({ row }) => {
       return (
         <div className="flex flex-col">
-          {row.getValue("products")?.map((product, idx) => (
-            <div key={idx}>
-              {idx + 1} {product?.title}
-            </div>
-          ))}
+          {row.getValue("products")?.map(
+            (product, idx) =>
+              console.log(product) || (
+                <div key={idx}>
+                  - {product?.title} ({product?.quantity})
+                </div>
+              )
+          )}
         </div>
       );
     },
@@ -154,10 +157,6 @@ export const columnsHistory = [
               </DialogFooter>
             </DialogContent>
           </Dialog>
-
-          {/* <button type="button" onClick={() => deleteMutate(row?.original?.id)}>
-            <Trash />
-          </button> */}
         </div>
       );
     },
